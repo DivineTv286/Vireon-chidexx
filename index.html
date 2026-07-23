@@ -1,1 +1,713 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Vireon – Earn, Connect, Grow</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
+ <link rel="stylesheet" href="./fonts/fonts.css">
+ <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="apple-touch-icon" href="assets/favicon.png">
+ <style>
+    :root {
+      --vireon-cyan: #00f2ff;
+      --vireon-navy: #0a192f;
+      --text-primary: #ffffff;
+      --bg-dark: #050b14;
+      --vireon-glow: rgba(0, 242, 255, 0.5);
+      --primary-colour: var(--vireon-navy);
+      --secondary-colour: #0d2847;
+      --accent: var(--vireon-cyan);
+      --primary-background: var(--bg-dark);
+      --secondary-background: #0b1a2e;
+      --primary-text: var(--text-primary);
+      --secondary-text: rgba(255,255,255,0.72);
+      --border: rgba(0, 242, 255, 0.12);
+      --white: #ffffff;
+      --font-primary: 'Vite Sans Display';
+      --font-secondary: 'Vite Sans Display';
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--primary-colour);
+      color: var(--primary-text);
+      font-family: var(--font-secondary);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    .text-center { text-align: center; }
+    .gold { color: var(--accent); }
+    .z-1 { z-index: 1; }
+    .z-2 { z-index: 2; }
+    .z-3 { z-index: 3; }
+    .z-4 { z-index: 4; }
+    .z-5 { z-index: 5; }
+    .relative { position: relative; }
+    .absolute { position: absolute; }
+    .w-8 { width: 2rem; }
+    .w-full { width: 100%; }
+    .mx-auto { margin-inline: auto; }
+    .mt-1 { margin-top: 0.25rem; }
+    .mt-2 { margin-top: 0.5rem; }
+    .mt-3 { margin-top: 0.75rem; }
+    .mt-4 { margin-top: 1rem; }
+    .mt-5 { margin-top: 1.25rem; }
+    .mt-6 { margin-top: 1.5rem; }
+    .mt-8 { margin-top: 2rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .mb-6 { margin-bottom: 1.5rem; }
+    .mb-8 { margin-bottom: 2rem; }
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .items-center { align-items: center; }
+    .justify-center { justify-content: center; }
+    .justify-between { justify-content: space-between; }
+    .gap-1 { gap: 0.25rem; }
+    .gap-2 { gap: 0.5rem; }
+    .gap-3 { gap: 0.75rem; }
+    .gap-4 { gap: 1rem; }
+    .gap-6 { gap: 1.5rem; }
+    .gap-8 { gap: 2rem; }
+    .text-sm { font-size: 0.875rem; }
+    .text-xs { font-size: 0.75rem; }
+    .topbar {
+      position: relative;
+      z-index: 30;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 0;
+    }
+    .brand img { height: 3rem; width: auto; }
+    .topbar-cta {
+      color: var(--vireon-navy);
+      background: var(--accent);
+      border-radius: 9999px;
+      align-items: center;
+      gap: 0.55rem;
+      min-height: 2.8rem;
+      padding-inline: 1.15rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: inline-flex;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+    .topbar-cta:hover {
+      transform: scale(1.04);
+      box-shadow: 0 4px 20px var(--vireon-glow);
+    }
+    .hero {
+      background: linear-gradient(180deg, #000 0%, rgba(0,0,0,0.4) 26%, #000 100%),
+                  var(--hero-bg-mobile, #0a192f) center/cover no-repeat;
+      min-height: 100svh;
+      position: relative;
+    }
+    .hero__inner {
+      flex-direction: column;
+      max-width: 28rem;
+      min-height: 100svh;
+      margin-inline: auto;
+      padding: 1.75rem 1.25rem 2rem;
+      display: flex;
+      position: relative;
+    }
+    .hero__content { margin-top: 6rem; }
+    .hero__title {
+      color: #fff;
+      letter-spacing: -0.05em;
+      font-weight: 900;
+      line-height: 0.92;
+    }
+    .hero__title .gold {
+      background: linear-gradient(135deg, var(--accent), #7af0ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero__copy {
+      color: rgba(255,255,255,0.88);
+      margin-top: 1rem;
+      font-size: 0.98rem;
+      line-height: 1.35;
+    }
+    .hero__actions {
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.8rem;
+      display: flex;
+    }
+    .pill-button {
+      border-radius: 9999px;
+      justify-content: center;
+      align-items: center;
+      min-height: 3.3rem;
+      padding-inline: 1.5rem;
+      font-size: 1rem;
+      font-weight: 700;
+      display: inline-flex;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      gap: 0.5rem;
+    }
+    .pill-button--primary {
+      color: var(--vireon-navy);
+      background: var(--accent);
+      box-shadow: 0 14px 30px var(--vireon-glow);
+    }
+    .pill-button--primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px var(--vireon-glow);
+    }
+    .pill-button--ghost {
+      color: #fff;
+      backdrop-filter: blur(12px);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .pill-button--ghost:hover { background: rgba(255,255,255,0.12); }
+    .pill-button--light {
+      color: var(--vireon-navy);
+      background: #fff;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.24);
+    }
+    .pill-button--light:hover { transform: translateY(-2px); box-shadow: 0 24px 55px rgba(0,0,0,0.3); }
+    .hero__badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+    .hero__badge {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.6);
+      background: rgba(255,255,255,0.04);
+      padding: 0.4rem 1rem;
+      border-radius: 9999px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .hero__badge i { color: var(--accent); font-size: 0.9rem; }
+    .hero__visual { min-height: 24rem; margin-top: auto; position: relative; }
+    .hero-bubble {
+      backdrop-filter: blur(12px);
+      background: rgba(10,25,47,0.8);
+      border: 1px solid rgba(0,242,255,0.15);
+      border-radius: 1.25rem;
+      padding: 0.8rem 0.95rem;
+      position: absolute;
+      box-shadow: 0 20px 42px rgba(0,0,0,0.4);
+      animation: float 6s ease-in-out infinite;
+    }
+    .hero-bubble--chat { top: 1.2rem; left: 0; animation-delay: 0s; }
+    .hero-bubble--call { top: 30%; right: 0; animation-delay: 2s; }
+    .hero-bubble--earn { bottom: 6rem; left: 0; animation-delay: 4s; }
+    .hero-bubble--secure { bottom: 0; right: 0; animation-delay: 1s; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+    .hero-bubble__row { align-items: center; gap: 0.7rem; display: flex; }
+    .hero-avatar {
+      color: var(--vireon-navy);
+      background: #fff;
+      border-radius: 9999px;
+      place-items: center;
+      width: 2.6rem;
+      height: 2.6rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: grid;
+      flex-shrink: 0;
+    }
+    .hero-bubble__title { font-size: 0.95rem; font-weight: 700; line-height: 1; }
+    .hero-bubble__copy { color: rgba(255,255,255,0.78); margin-top: 0.25rem; font-size: 0.82rem; }
+    .hero-bubble .gold-icon { color: var(--accent); font-size: 1.6rem; }
+    .hero-bubble .bubble-value { font-weight: 700; color: var(--accent); font-size: 0.95rem; }
+    .banner {
+      background: var(--primary-colour);
+      padding: 3rem 1rem;
+    }
+    .banner__container {
+      max-width: 28rem;
+      margin-inline: auto;
+    }
+    .banner__title {
+      font-family: var(--font-primary);
+      letter-spacing: -0.04em;
+      color: #fff;
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 0.94;
+      margin-bottom: 1.5rem;
+    }
+    .banner__grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.8rem;
+    }
+    .banner-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(0,242,255,0.08);
+      border-radius: 1.8rem;
+      padding: 1.8rem 1.5rem;
+      backdrop-filter: blur(8px);
+      transition: all 0.3s;
+    }
+    .banner-card:hover {
+      border-color: rgba(0,242,255,0.25);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+    }
+    .banner-card__icon {
+      font-size: 2rem;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .banner-card__title {
+      font-family: var(--font-primary);
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: #fff;
+      line-height: 1.1;
+    }
+    .banner-card__desc {
+      color: rgba(255,255,255,0.7);
+      margin-top: 0.4rem;
+      font-size: 0.98rem;
+      line-height: 1.4;
+    }
+    .banner-card__highlight {
+      display: inline-block;
+      margin-top: 0.8rem;
+      background: rgba(0,242,255,0.08);
+      color: var(--accent);
+      padding: 0.25rem 1rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      border: 1px solid rgba(0,242,255,0.1);
+    }
+    .socialfi {
+      text-align: center;
+      background: linear-gradient(#000 0%, var(--secondary-colour) 100%);
+      padding: 16rem 1.25rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .socialfi__inner { max-width: 28rem; margin-inline: auto; padding-bottom: 11rem; position: relative; }
+    .socialfi__card {
+      backdrop-filter: blur(8px);
+      z-index: 10;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(0,242,255,0.15);
+      border-radius: 1.55rem;
+      width: 7.9rem;
+      padding: 0.9rem 0.78rem 0.85rem;
+      position: absolute;
+    }
+    .socialfi__card--top { top: -8rem; right: 8rem; transform: rotate(12deg); }
+    .socialfi__card--bottom { top: 11rem; left: 50%; transform: translate(-50%) rotate(-13deg); }
+    .socialfi__card-avatar {
+      color: var(--vireon-navy);
+      background: #fff;
+      border-radius: 9999px;
+      place-items: center;
+      width: 3rem;
+      height: 3rem;
+      margin-inline: auto;
+      font-size: 1rem;
+      font-weight: 700;
+      display: grid;
+    }
+    .socialfi__card-name { margin-top: 0.55rem; font-size: 1.2rem; font-weight: 500; line-height: 1; }
+    .socialfi__hash { position: absolute; top: -2rem; left: 3rem; font-size: 4rem; color: rgba(255,255,255,0.04); }
+    .socialfi__text {
+      font-family: var(--font-primary);
+      letter-spacing: -0.07em;
+      font-size: 5.8rem;
+      font-weight: 900;
+      line-height: 0.86;
+      position: relative;
+    }
+    .socialfi__copy {
+      color: rgba(255,255,255,0.88);
+      margin: 6.5rem auto 0;
+      font-size: 1rem;
+      line-height: 1.32;
+      max-width: 22rem;
+    }
+    .socialfi__cta { margin-top: 2.4rem; }
+    .features { background: var(--primary-colour); padding: 4.8rem 1.25rem 4rem; }
+    .features__inner { max-width: 28rem; margin-inline: auto; }
+    .features__title {
+      font-family: var(--font-primary);
+      letter-spacing: -0.05em;
+      text-align: center;
+      color: #fff;
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 0.94;
+    }
+    .features__copy { text-align: center; color: rgba(255,255,255,0.7); margin-top: 0.35rem; font-size: 1rem; }
+    .features__underline { background: var(--accent); border-radius: 9999px; width: 4rem; height: 0.25rem; margin: 1rem auto 0; }
+    .feature-stack { gap: 1.25rem; margin-top: 2.6rem; display: grid; }
+    .feature-card {
+      border-radius: 2rem;
+      overflow: hidden;
+      background: rgba(10,25,47,0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(0,242,255,0.06);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: all 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .feature-card:hover { transform: translateY(-8px); border-color: rgba(0,242,255,0.25); box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+    .feature-card__icon { font-size: 2.6rem; color: var(--accent); margin-bottom: 0.75rem; display: block; }
+    .feature-card__icon i { background: rgba(0,242,255,0.08); padding: 0.75rem; border-radius: 1rem; display: inline-block; }
+    .feature-card__heading { font-family: var(--font-primary); color: #fff; font-size: 1.4rem; font-weight: 900; line-height: 1.1; }
+    .feature-card__text { color: rgba(255,255,255,0.7); margin-top: 0.6rem; font-size: 0.95rem; line-height: 1.4; }
+    .feature-card__reward {
+      display: inline-block;
+      margin-top: 1rem;
+      background: rgba(0,242,255,0.1);
+      color: var(--accent);
+      padding: 0.3rem 1.2rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: 1px solid rgba(0,242,255,0.15);
+    }
+    .feature-card__button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 1rem;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s;
+    }
+    .feature-card__button:hover { color: #fff; transform: translateX(4px); }
+    .testimonial { background: var(--primary-colour); padding: 4.4rem 1.25rem 2.5rem; }
+    .testimonial__inner { max-width: 28rem; margin-inline: auto; }
+    .testimonial__eyebrow { color: var(--accent); font-size: 1rem; font-weight: 500; }
+    .testimonial__head { justify-content: space-between; align-items: flex-start; gap: 1.2rem; margin-top: 0.8rem; display: flex; }
+    .testimonial__title { max-width: 16rem; font-family: var(--font-primary); letter-spacing: -0.04em; font-size: 2rem; font-weight: 600; line-height: 1.02; color: #fff; }
+    .testimonial__nav { color: rgba(255,255,255,0.5); gap: 0.6rem; display: flex; }
+    .testimonial__nav-button { background: rgba(255,255,255,0.04); border: none; border-radius: 9999px; place-items: center; width: 2.25rem; height: 2.25rem; font-size: 1.35rem; display: grid; cursor: pointer; color: #fff; transition: background 0.3s; }
+    .testimonial__nav-button:hover { background: rgba(255,255,255,0.1); }
+    .testimonial__stars { color: var(--accent); gap: 0.28rem; margin-top: 1.55rem; font-size: 1.1rem; display: flex; }
+    .testimonial__quote { color: rgba(255,255,255,0.7); max-width: 22rem; margin-top: 1rem; font-size: 0.98rem; line-height: 1.38; }
+    .testimonial__person { align-items: center; gap: 0.95rem; margin-top: 1.3rem; display: flex; }
+    .testimonial__avatar { border-radius: 9999px; width: 3.3rem; height: 3.3rem; object-fit: cover; }
+    .testimonial__avatar--fallback { color: var(--vireon-navy); background: var(--accent); place-items: center; font-size: 1rem; font-weight: 700; display: grid; }
+    .testimonial__name { font-family: var(--font-primary); color: #fff; font-size: 1.13rem; font-weight: 600; line-height: 1; }
+    .testimonial__role { color: rgba(255,255,255,0.5); margin-top: 0.2rem; font-size: 0.95rem; }
 
+    .stats { background: rgba(0,0,0,0.2); padding: 2rem 1.25rem 4.8rem; }
+    .stats__inner { text-align: center; gap: 2.45rem; max-width: 28rem; margin-inline: auto; display: grid; grid-template-columns: repeat(3, 1fr); }
+    .stats__value { font-family: var(--font-primary); letter-spacing: -0.05em; color: var(--accent); font-size: 3.2rem; font-weight: 900; line-height: 0.9; }
+    .stats__label { font-family: var(--font-primary); color: rgba(255,255,255,0.7); margin-top: 0.75rem; font-size: 1.1rem; font-weight: 600; line-height: 1.05; }
+
+    .faq { background: rgba(0,0,0,0.1); padding: 4.3rem 1rem 3rem; }
+    .faq__inner { max-width: 28rem; margin-inline: auto; }
+    .faq__eyebrow { color: var(--accent); font-size: 1rem; font-weight: 500; }
+    .faq__title { max-width: 19rem; font-family: var(--font-primary); letter-spacing: -0.06em; color: #fff; margin-top: 0.35rem; font-size: 2rem; font-weight: 600; line-height: 0.9; }
+    .faq__list { border-top: 1px solid rgba(255,255,255,0.06); margin-top: 2.6rem; }
+    .faq__item { border-bottom: 1px solid rgba(255,255,255,0.06); padding-block: 1.5rem; }
+    .faq__summary { cursor: pointer; justify-content: space-between; align-items: flex-start; gap: 1rem; list-style: none; display: flex; }
+    .faq__summary::-webkit-details-marker { display: none; }
+    .faq__question { max-width: 18rem; font-family: var(--font-primary); color: #fff; font-size: 1.2rem; font-weight: 600; line-height: 1.08; }
+    .faq__icon { color: #fff; background: rgba(255,255,255,0.04); border-radius: 9999px; flex-shrink: 0; place-items: center; width: 2.75rem; height: 2.75rem; font-size: 1.2rem; display: grid; transition: all 0.3s; }
+    .faq__item[open] .faq__icon { color: var(--accent); background: rgba(0,242,255,0.1); }
+    .faq__answer { color: rgba(255,255,255,0.7); max-width: 19rem; padding: 1.15rem 1.2rem 0 0.15rem; font-size: 0.98rem; line-height: 1.32; }
+
+    .cta { color: #fff; background: var(--primary-colour); padding: 3rem 1rem 3.5rem; }
+    .cta__inner { max-width: 28rem; margin-inline: auto; }
+    .cta__card { text-align: center; background: linear-gradient(40deg, rgba(10,25,47,0.8) 0%, rgba(0,242,255,0.08) 100%); border: 1px solid rgba(0,242,255,0.1); border-radius: 1.9rem; padding: 2.35rem 1.4rem 2.55rem; overflow: hidden; }
+    .cta__title { font-family: var(--font-primary); letter-spacing: -0.05em; color: var(--white); font-size: 2rem; font-weight: 600; line-height: 0.98; }
+    .cta__copy { color: rgba(255,255,255,0.88); max-width: 18rem; margin: 0.95rem auto 0; font-size: 1rem; line-height: 1.34; }
+    .cta__action { margin-top: 2rem; }
+    .cta__button { color: var(--vireon-navy); background: var(--accent); width: 100%; max-width: 20rem; }
+
+    .footer { background: rgba(0,0,0,0.3); color: #fff; padding: 2rem 1rem 2.6rem; border-top: 1px solid rgba(255,255,255,0.04); }
+    .footer__inner { max-width: 28rem; margin-inline: auto; }
+    .footer__brand { align-items: center; gap: 0.65rem; display: flex; }
+    .footer__logo { object-fit: contain; width: auto; height: 3rem; }
+    .footer__intro { color: rgba(255,255,255,0.92); max-width: 22rem; margin-top: 1.5rem; font-size: 1rem; line-height: 1.33; }
+    .footer__group { margin-top: 2rem; }
+    .footer__heading { font-family: var(--font-primary); color: var(--white); font-size: 1.2rem; font-weight: 500; line-height: 1; }
+    .footer__links { gap: 0.75rem; margin-top: 1.25rem; display: grid; }
+    .footer__link { color: rgba(255,255,255,0.7); font-size: 1rem; transition: color 0.3s; }
+    .footer__link:hover { color: #fff; }
+    .footer__support-copy { color: rgba(255,255,255,0.92); max-width: 22rem; margin-top: 1.3rem; font-size: 1rem; line-height: 1.33; }
+    .footer__support-highlight { color: var(--accent); display: block; margin-top: 0.3rem; }
+    .footer__support-highlight i { margin-right: 0.4rem; }
+    @media (min-width: 768px) {
+      .hero__inner, .socialfi__inner, .features__inner, .testimonial__inner, .stats__inner, .faq__inner, .cta__inner, .footer__inner, .banner__container { max-width: 72rem; }
+      .hero__inner { padding: 2.25rem 2rem 3rem; }
+      .hero__content { max-width: 42rem; margin-top: 8rem; }
+      .hero__title { font-size: 5rem; }
+      .hero__copy { font-size: 1.18rem; }
+      .hero__visual { min-height: 30rem; }
+      .socialfi { padding: 16rem 2rem 0; }
+      .socialfi__text { font-size: 10rem; }
+      .socialfi__card { width: 9.2rem; }
+      .socialfi__card--top { top: -7rem; right: 40%; }
+      .socialfi__card--bottom { top: 21rem; }
+      .socialfi__hash { z-index: 1; font-size: 6rem; top: -2rem; left: 19rem; }
+      .socialfi__copy { max-width: 31rem; font-size: 1.15rem; }
+      .features { padding: 6rem 2rem; }
+      .features__title { font-size: 4.4rem; }
+      .feature-stack { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+      .banner { padding: 4rem 2rem; }
+      .banner__container { max-width: 72rem; }
+      .banner__title { font-size: 3.2rem; }
+      .banner__grid { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+      .testimonial { padding: 5.2rem 2rem 3rem; }
+      .testimonial__title { max-width: 22rem; font-size: 3rem; }
+      .testimonial__quote { max-width: 33rem; font-size: 1.08rem; }
+      .stats { padding: 2rem 2rem 6rem; }
+      .stats__inner { grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+      .stats__value { font-size: 5.2rem; }
+      .faq__inner, .cta__inner, .footer__inner { max-width: 72rem; }
+      .faq, .cta, .footer { padding-inline: 2rem; }
+      .faq__title { max-width: 24rem; font-size: 4rem; }
+      .faq__question { max-width: 28rem; }
+      .faq__answer { max-width: 30rem; }
+      .cta__card { padding-inline: 3rem; }
+      .cta__copy { max-width: 24rem; }
+      .cta__button { width: auto; min-width: 22rem; }
+      .footer__intro, .footer__support-copy { max-width: 34rem; }
+      .footer__inner { display: grid; grid-template-columns: 2fr 1fr 1.5fr; gap: 3rem; }
+      .footer__group { margin-top: 0; }
+    }
+    @media (max-width: 767px) {
+      .stats__inner { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+      .hero-bubble--call, .hero-bubble--earn, .hero-bubble--secure { display: none; }
+      .hero__visual { min-height: auto; }
+      .hero-bubble--chat { position: relative; top: auto; left: auto; margin-top: 1.5rem; display: inline-block; }
+      .feature-stack { grid-template-columns: 1fr; }
+      .socialfi__hash { display: none; }
+      .banner__grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .hero__title { font-size: 2.4rem; }
+      .stats__value { font-size: 2.2rem; }
+      .stats__inner { grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+      .socialfi__text { font-size: 3.5rem; }
+      .socialfi__card { width: 6rem; padding: 0.6rem 0.5rem; }
+      .socialfi__card--top { top: -6rem; right: 2rem; }
+      .socialfi__card--bottom { top: 8rem; }
+      .socialfi__card-avatar { width: 2.2rem; height: 2.2rem; font-size: 0.8rem; }
+      .socialfi__card-name { font-size: 0.9rem; }
+      .banner__title { font-size: 1.8rem; }
+    }
+    .hero__inner::after{
+      content:'';
+      position:absolute;
+      bottom:0;
+      right:0;
+      left:0;
+      height:300px;
+      background:linear-gradient(to top,var(--secondary-background),transparent);
+    }
+  </style>
+</head>
+<body>
+  <div class="home-shell min-h-screen">
+    <section class="hero" style="--hero-bg-mobile: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMwYTE5MmYiLz48L3N2Zz4=');">
+      <div style="overflow-y: hidden;position:relative;" class="hero__inner">
+        <header class="topbar">
+          <img height="30px" src="logo.png" alt="Logo">
+          <a href="register.html" class="topbar-cta"><i class="ri-login-circle-line"></i>Register</a>
+        </header>
+        <div class="hero__content">
+          <h1 style="font-size:3rem;" class="hero__title">Connect, <span class="gold">Earn</span> &amp; Grow<br>with <span class="gold">Vireon</span></h1>
+          <p class="hero__copy">Turn every call, survey, and task into real rewards. Safe, fast, and secure – your daily connection now pays.</p>
+          <div class="hero__actions">
+            <a href="register.html" class="pill-button pill-button--primary"><i class="ri-rocket-2-line"></i> Get Started</a>
+            <a href="#" class="pill-button pill-button--ghost"><i class="ri-play-circle-line"></i> Learn More</a>
+          </div>
+          <div class="hero__badges">
+            <span class="hero__badge"><i class="ri-shield-check-fill"></i> 256-bit Secure</span>
+            <span class="hero__badge"><i class="ri-flashlight-fill"></i> Instant Rewards</span>
+            <span class="hero__badge"><i class="ri-global-line"></i> Global Access</span>
+          </div>
+        </div>
+        <div class="hero__visual">
+          <div class="hero-bubble hero-bubble--chat">
+            <div class="hero-bubble__row"><span class="hero-avatar">V</span><div><p class="hero-bubble__title">Vireon Call</p><p class="hero-bubble__copy">Earn <span class="bubble-value">$10</span> per call</p></div></div>
+          </div>
+         
+        </div>
+        <img style="border-radius:20px 20px 0 0;margin-top:-30%;width:clamp(400px,100%,500px);transform:translateY(30%);" src="IMG_8829.jpeg" alt="">
+      </div>
+    </section>
+
+    <!-- BANNER SECTION 1 – Orbit Cycle / Partner Reward -->
+    <section class="banner">
+      <div class="banner__container">
+        <h2 class="banner__title">Orbit Cycle <span class="gold">Rewards</span></h2>
+        <div class="banner__grid">
+          <div class="banner-card">
+            <div class="banner-card__icon"><i class="ri-loop-left-line"></i></div>
+            <h3 class="banner-card__title">Vireon Orbit Cycle</h3>
+            <p class="banner-card__desc">Onboarding, partner rewards, and orbit credits. Each cycle gives you 1000 credits. Build up to 50,000 credits.</p>
+            <span class="banner-card__highlight">1 cycle = 1000 credit</span>
+          </div>
+          <div class="banner-card">
+            <div class="banner-card__icon"><i class="ri-user-shared-line"></i></div>
+            <h3 class="banner-card__title">Partner Reward</h3>
+            <p class="banner-card__desc">Earn indirect commissions and partner rewards. Every referral adds to your orbit.</p>
+            <span class="banner-card__highlight">N14,500 / 7.25</span>
+          </div>
+          <div class="banner-card">
+            <div class="banner-card__icon"><i class="ri-wallet-line"></i></div>
+            <h3 class="banner-card__title">Vireon Credit</h3>
+            <p class="banner-card__desc">Daily surveys, loan disbursement, and call cash. Your credit grows with every task.</p>
+            <span class="banner-card__highlight">N12,000 / 5.95</span>
+          </div>
+          <div class="banner-card">
+            <div class="banner-card__icon"><i class="ri-phone-line"></i></div>
+            <h3 class="banner-card__title">Call Cash</h3>
+            <p class="banner-card__desc">Earn up to N5,000 per 15-minute call with foreigners. Longer calls, higher rewards.</p>
+            <span class="banner-card__highlight">N5,000 / 15min</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="socialfi">
+      <div class="socialfi__inner">
+        <span class="socialfi__hash z-5">#</span>
+        <div style="backdrop-filter:blur(20px);-webkit-backdrop-filter: blur(20px);" class="socialfi__card socialfi__card--top">
+          <div style="height:50px;width:50px;background:#00f2ff;margin:auto;font-weight:900;text-align:center;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;color:#0a192f">P</div>
+        <p class="socialfi__card-name">Paul M.</p><p style="font-size:0.88rem;margin-top:0.25rem;opacity:0.7;">Alaska, US</p></div>
+        <div style="backdrop-filter:blur(20px);-webkit-backdrop-filter: blur(20px);" class="socialfi__card socialfi__card--bottom">
+          <div style="height:50px;width:50px;background:#00f2ff;margin:auto;font-weight:900;text-align:center;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;color:#0a192f">R</div>
+          <p class="socialfi__card-name">Rodrigo J.</p><p style="font-size:0.88rem;margin-top:0.25rem;opacity:0.7;">Sao Paulo, Brazil</p></div>
+        <div style="display:flex;flex-direction:column;align-items:center;font-weight:900;">
+          <span class="socialfi__text" style="color:#fff;">VIREON</span>
+          <span class="socialfi__text" style="color:var(--accent);">PREMIER</span>
+          <span class="socialfi__text" style="color:rgba(255,255,255,0.4);">EARN</span>
+        </div>
+        <p class="socialfi__copy">Vireon Premier Earning Layout – Onboarding, Partner Rewards, Indirect Commissions, Daily Surveys, Loan Disbursement, Call Cash, Snap &amp; Google, Converse, Pin-to-Profit, and Vireon IQ.</p>
+        <div class="socialfi__cta"><a href="register.html" class="pill-button pill-button--light"><i class="ri-user-add-line"></i> Join Vireon Now</a></div>
+      </div>
+    </section>
+    <section class="features">
+      <div class="features__inner">
+        <div class="text-center"><h2 class="features__title">Vireon <span class="gold">Features</span></h2><p class="features__copy">Earn daily with Vireon</p><div class="features__underline"></div></div>
+        <div class="feature-stack">
+          <article class="feature-card">
+             <img style="width:100%;border-radius:20px;margin-bottom:20px;" src="./images/IMG_8835.jpeg" alt="">
+            <h3 class="feature-card__heading">Vireon CallCash</h3><p class="feature-card__text">Earn up to N5,000 per 15-min call with foreigners. Longer calls, bigger rewards.</p><span class="feature-card__reward">N5k / 15min</span><br><a href="register.html" class="feature-card__button">Start Calling <i class="ri-arrow-right-line"></i></a>
+          </article>
+          <article class="feature-card">
+             <img style="width:100%;border-radius:20px;margin-bottom:20px;" src="./images/IMG_8838.jpeg" alt="">
+            <h3 class="feature-card__heading">Vireon Surveys</h3><p class="feature-card__text">Share opinions on Amazon, eBay, Tesco &amp; more. Earn £5 per approved survey.</p><span class="feature-card__reward">£5 / survey</span><br><a href="register.html" class="feature-card__button">Take Survey <i class="ri-arrow-right-line"></i></a></article>
+          <article class="feature-card">
+             <img style="width:100%;border-radius:20px;margin-bottom:20px;" src="./images/IMG_8836.jpeg" alt="">
+            
+        <h3 class="feature-card__heading">Vireon IQ</h3><p class="feature-card__text">Review movie trailers, spot inaccuracies, submit corrections. Earn £5 per approved.</p><span class="feature-card__reward">£5 / submission</span><br><a href="register.html" class="feature-card__button">Join IQ <i class="ri-arrow-right-line"></i></a></article>
+          <article class="feature-card">
+          <img style="width:100%;border-radius:20px;margin-bottom:20px;" src="./images/IMG_8837.jpeg" alt="">
+
+            <h3 class="feature-card__heading">Vireon Converse</h3><p class="feature-card__text">Connect with international clients, assist with tasks, earn per assignment.</p><span class="feature-card__reward">Pay per task</span><br><a href="register.html" class="feature-card__button">Converse now <i class="ri-arrow-right-line"></i></a></article>
+          <article class="feature-card">
+          <img style="width:100%;border-radius:20px;margin-bottom:20px;" src="./images/IMG_8833.jpeg" alt="">
+
+            <h3 class="feature-card__heading">Pin-to-Profit</h3><p class="feature-card__text">Turn Pinterest activity into income. Connect, upload pics, earn £3 per pin.</p><span class="feature-card__reward">£3 / pin</span><br><a href="register.html" class="feature-card__button">Pin now <i class="ri-arrow-right-line"></i></a></article>
+          <article class="feature-card">
+            <img style="width:100%;border-radius:20px;margin-bottom:20px;" src="./images/IMG_8834.jpeg" alt="">
+
+            <h3 class="feature-card__heading">Google Monetization</h3><p class="feature-card__text">Earn £5 daily from simple Google-based online activities.</p><span class="feature-card__reward">£5 / day</span><br><a href="register.html" class="feature-card__button">Monetize <i class="ri-arrow-right-line"></i></a></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- BANNER SECTION 2 – Streak & X Revenue -->
+    <section class="banner">
+      <div class="banner__container">
+        <h2 class="banner__title">Streak &amp; <span class="gold">X Revenue</span></h2>
+        <div class="banner__grid">
+          <div class="banner-card">
+            <div class="banner-card__icon"><i class="ri-fire-line"></i></div>
+            <h3 class="banner-card__title">Vireon Streak Reward</h3>
+            <p class="banner-card__desc">Log in daily and earn up to N60,000 after 30 consecutive days. N2,000 per login.</p>
+            <span class="banner-card__highlight">N60k / 30 days</span>
+          </div>
+          <div class="banner-card">
+            <div class="banner-card__icon"><i class="ri-twitter-x-line"></i></div>
+            <h3 class="banner-card__title">X Revenue Program</h3>
+            <p class="banner-card__desc">Connect your X account, engage, and earn £3. Your online presence now pays.</p>
+            <span class="banner-card__highlight">£3 per engagement</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIAL -->
+    <section class="testimonial">
+      <div class="testimonial__inner">
+        <p class="testimonial__eyebrow">Testimonial</p>
+        <div class="testimonial__head"><h2 class="testimonial__title">What Our <span class="gold">Users</span> Say</h2><div class="testimonial__nav"><button type="button" class="testimonial__nav-button"><i class="ri-arrow-left-line"></i></button><button type="button" class="testimonial__nav-button"><i class="ri-arrow-right-line"></i></button></div></div>
+        <div class="testimonial__stars"><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i></div>
+        <blockquote class="testimonial__quote">“Vireon changed my life. I earn daily from surveys, calls, and tasks. It's safe, fast, and truly secure!”</blockquote>
+        <div class="testimonial__person"><span class="testimonial__avatar testimonial__avatar--fallback">D</span><div><p class="testimonial__name">David J.</p><p class="testimonial__role">Abuja, Nigeria</p></div></div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats"><div class="stats__inner"><article><p class="stats__value">50K+</p><p class="stats__label">Active Users</p></article><article><p class="stats__value">N500M+</p><p class="stats__label">Rewards Paid</p></article><article><p class="stats__value">10K+</p><p class="stats__label">Daily Tasks</p></article></div></section>
+
+    <!-- FAQ -->
+    <section class="faq"><div class="faq__inner"><p class="faq__eyebrow"><i class="ri-question-line"></i> Your Questions? Answered</p><h2 class="faq__title">Frequently Asked <span class="gold">Questions</span></h2><div class="faq__list">
+      <details class="faq__item" open><summary class="faq__summary"><span class="faq__question">What is Vireon?</span><span class="faq__icon"><i class="ri-subtract-line"></i></span></summary><div class="faq__answer">Vireon is a digital earning platform that rewards you for calls, surveys, tasks, and more. It's secure, fast, and built for everyone.</div></details>
+      <details class="faq__item"><summary class="faq__summary"><span class="faq__question">How do I start earning?</span><span class="faq__icon"><i class="ri-add-line"></i></span></summary><div class="faq__answer">Sign up, verify your account, and choose from any feature – calls, surveys, Pin-to-Profit, or Converse. Rewards are credited daily.</div></details>
+      <details class="faq__item"><summary class="faq__summary"><span class="faq__question">How do I get paid?</span><span class="faq__icon"><i class="ri-add-line"></i></span></summary><div class="faq__answer">Payments via bank transfer, mobile money, or crypto. You choose your withdrawal method.</div></details>
+      <details class="faq__item"><summary class="faq__summary"><span class="faq__question">Is Vireon secure?</span><span class="faq__icon"><i class="ri-add-line"></i></span></summary><div class="faq__answer">Yes. 256-bit encryption, 2FA, and strict protocols protect your data and earnings.</div></details>
+    </div></div></section>
+
+    <!-- CTA -->
+    <section class="cta"><div class="cta__inner"><div class="cta__card"><h2 class="cta__title">Start Earning <span class="gold">Today</span></h2><p class="cta__copy">Join thousands of users turning daily activities into real cash. Get started in minutes – it's free!</p><div class="cta__action"><a href="register.html" class="pill-button pill-button--light cta__button"><i class="ri-user-add-line"></i> Create Free Account</a></div></div></div></section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer__inner"><div class="footer__brand">
+       <img height="30px" src="logo.png" alt="Logo">
+        </div><div class="footer__intro">Vireon – the platform that rewards your daily connections. Safe, fast, and secure earnings for everyone.</div><div class="footer__group"><h3 class="footer__heading">Quick Links</h3><div class="footer__links"><a href="#" class="footer__link">Home</a><a href="#" class="footer__link">About</a><a href="#" class="footer__link">Features</a><a href="register.php" class="footer__link">Earn</a><a href="#" class="footer__link">Contact</a></div></div><div class="footer__group"><h3 class="footer__heading">Support</h3><p class="footer__support-copy">Need help? We respond within 24 hours.<span class="footer__support-highlight"><i class="ri-mail-line"></i> support@vireon.com</span><span class="footer__support-highlight" style="font-weight:400;color:rgba(255,255,255,0.5);"><i class="ri-phone-line"></i> +234 800 VIREON</span></p></div></div></footer>
+  </div>
+
+  <script>
+    const menuToggle = document.getElementById('menuToggle');
+    const drawer = document.getElementById('mobileDrawer');
+    const drawerClose = document.getElementById('drawerClose');
+    const drawerBackdrop = document.getElementById('drawerBackdrop');
+    function openDrawer(){ drawer.classList.add('is-open'); document.body.style.overflow = 'hidden'; }
+    function closeDrawer(){ drawer.classList.remove('is-open'); document.body.style.overflow = ''; }
+    if(menuToggle) menuToggle.addEventListener('click', openDrawer);
+    if(drawerClose) drawerClose.addEventListener('click', closeDrawer);
+    if(drawerBackdrop) drawerBackdrop.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeDrawer(); });
+    document.querySelectorAll('.faq__summary').forEach(summary => {
+      summary.addEventListener('click', function() {
+        const details = this.parentElement;
+        const icon = this.querySelector('.faq__icon i');
+        if(details.hasAttribute('open')) icon.className = 'ri-add-line';
+        else icon.className = 'ri-subtract-line';
+      });
+    });
+    console.log('Vireon – Earn, Connect, Grow');
+  </script>
+</body>
+                                                                                                                                                                  </html>
