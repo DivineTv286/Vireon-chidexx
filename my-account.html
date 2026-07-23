@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Vireon</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- ===== REMIX ICON ===== -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.min.css">
+ <link rel="stylesheet" href="./fonts/fonts.css">
+    <style>
+        :root {
+            --vireon-cyan: #00f2ff;
+            --vireon-navy: #0a192f;
+            --vireon-glow: rgba(0, 242, 255, 0.5);
+            --bg-body: #0a192f;
+            --bg-card: rgba(10, 25, 47, 0.85);
+            --bg-gray-pill: rgba(255,255,255,0.06);
+            --text-main: #ffffff;
+            --text-muted: rgba(255,255,255,0.6);
+            --border-color: rgba(0, 242, 255, 0.08);
+            --accent-green: #00f2ff;
+            --accent-dark-green: #00b8c4;
+            --accent-blue: #00b8c4;
+            --accent-orange: #00d4e0;
+            --accent-purple: #7c3aed;
+            --accent-pink: #ec4899;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.3);
+            --radius-pill: 50px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --font-heading: 'Bricolage Grotesque', 'Inter', sans-serif;
+            --font-body: 'Vite Sans Display','Inter', sans-serif;
+        }
+
+        [data-theme="light"] {
+            --bg-body: #0a192f;
+            --bg-card: rgba(255,255,255,0.08);
+            --bg-gray-pill: rgba(255,255,255,0.06);
+            --text-main: #ffffff;
+            --text-muted: rgba(255,255,255,0.6);
+            --border-color: rgba(0, 242, 255, 0.08);
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            outline: none; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+        
+        body {
+            background: linear-gradient(180deg, #000 0%, rgba(0,0,0,0.4) 26%, #000 100%),
+                        #0a192f center/cover no-repeat;
+            color: var(--text-main);
+            font-family: var(--font-body);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            padding-bottom: 40px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            background-attachment: fixed;
+        }
+
+        /* Subtle grid pattern overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        h1, h2, h3, h4, .btn, .logo { 
+            font-family: var(--font-heading); 
+        }
+        a { 
+            text-decoration: none; 
+            color: inherit; 
+        }
+        #ticker-container {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            z-index: 1500;
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 10px;
+            pointer-events: none;
+            align-items: flex-start;
+        }
+
+        .ticker-toast {
+            background: var(--bg-card);
+            color: var(--text-main);
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            max-width: 340px;
+            border-left: 4px solid var(--accent-green);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            animation: slideInUp 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards, fadeOutDown 0.6s ease-in 6.5s forwards;
+            pointer-events: auto;
+            border: 1px solid rgba(0, 242, 255, 0.08);
+        }
+
+        .ticker-toast.type-call { border-left-color: var(--accent-green); }
+        .ticker-toast.type-withdraw { border-left-color: var(--accent-blue); }
+        .ticker-toast.type-activated { border-left-color: var(--accent-purple); }
+        .ticker-toast.type-game { border-left-color: var(--accent-orange); }
+        .ticker-toast.type-music { border-left-color: var(--accent-pink); }
+        .ticker-toast.type-job { border-left-color: #EF4444; }
+
+        .ticker-icon {
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.9rem;
+        }
+
+        .type-call .ticker-icon { background: rgba(0, 242, 255, 0.15); color: var(--accent-green); }
+        .type-withdraw .ticker-icon { background: rgba(0, 242, 255, 0.15); color: var(--accent-blue); }
+        .type-activated .ticker-icon { background: rgba(124, 58, 237, 0.15); color: var(--accent-purple); }
+        .type-game .ticker-icon { background: rgba(0, 242, 255, 0.15); color: var(--accent-orange); }
+        .type-music .ticker-icon { background: rgba(236, 72, 153, 0.15); color: var(--accent-pink); }
+        .type-job .ticker-icon { background: rgba(239, 68, 68, 0.15); color: #EF4444; }
+
+        .ticker-content { display: flex; flex-direction: column; }
+        .ticker-name { font-size: 0.78rem; font-weight: 500; color: var(--text-muted); margin-bottom: 2px; }
+        .ticker-amount { font-size: 0.95rem; font-weight: 800; color: var(--text-main); font-family: var(--font-heading); }
+        .ticker-amount span { font-weight: 800; }
+        .type-call .ticker-amount span { color: var(--accent-green); }
+        .type-withdraw .ticker-amount span { color: var(--accent-blue); }
+        .type-activated .ticker-amount span { color: var(--accent-purple); }
+        .type-game .ticker-amount span { color: var(--accent-orange); }
+        .type-music .ticker-amount span { color: var(--accent-pink); }
+        .type-job .ticker-amount span { color: #EF4444; }
+
+        @keyframes slideInUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeOutDown {
+            from { transform: translateY(0); opacity: 1; }
+            to { transform: translateY(50px); opacity: 0; }
+        }
+        .top-header {
+            padding: 12px 20px;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            background-color: rgba(10, 25, 47, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: sticky; 
+            top: 0; 
+            z-index: 100;
+            border-bottom: 1px solid rgba(0, 242, 255, 0.04);
+        }
+
+        .user-greeting { display: flex; align-items: center; gap: 10px; }
+        .avatar-header {
+            width: 36px; height: 36px; 
+            background: var(--accent-green) !important; 
+            border-radius: 50%;
+            overflow: hidden; 
+            border: 2px solid var(--accent-green);
+            box-shadow: var(--shadow-sm); 
+            flex-shrink: 0;
+            color: #0a192f !important;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .avatar-header img { width: 100%; height: 100%; object-fit: cover; }
+        .greeting-text h2 { font-size: 0.95rem; font-weight: 700; color: var(--text-main); line-height: 1.1; }
+        .greeting-text p { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; }
+
+        .header-controls { display: flex; align-items: center; gap: 8px; }
+        .control-pill {
+            background-color: var(--bg-gray-pill); 
+            width: 36px; height: 36px;
+            border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-main); 
+            font-size: 0.9rem; 
+            cursor: pointer; 
+            transition: 0.2s; 
+            border: none;
+        }
+        .control-pill:hover { 
+            transform: scale(1.05); 
+            background-color: rgba(0, 242, 255, 0.15);
+        }
+
+        /* ============================================================
+           MAIN LAYOUT
+           ============================================================ */
+        .main-content { 
+            padding: 0 20px 20px; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            width: 100%; 
+            position: relative; 
+            z-index: 1; 
+        }
+
+        /* ============================================================
+           BALANCE SECTION
+           ============================================================ */
+        .balance-section { margin-top: 5px; }
+        .balance-header-row {
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 16px; gap: 10px;
+        }
+        .balance-info-col { flex: 1; }
+        .hide-balance-label {
+            font-size: 0.7rem; 
+            color: var(--text-muted); 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            font-weight: 600; 
+            margin-bottom: 2px; 
+            display: flex; 
+            align-items: center; 
+            gap: 4px; 
+            cursor: pointer;
+        }
+        .total-balance-amount {
+            font-size: 1.8rem; 
+            font-weight: 800; 
+            color: var(--text-main); 
+            letter-spacing: -0.5px; 
+            line-height: 1; 
+            font-family: var(--font-heading);
+        }
+
+        .btn-activate-header {
+            background: var(--accent-green); 
+            color: #0a192f;
+            border: none; 
+            border-radius: var(--radius-pill);
+            padding: 12px 24px; 
+            font-size: 0.9rem; 
+            font-weight: 800; 
+            white-space: nowrap; 
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 242, 255, 0.3);
+            transition: all 0.2s; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px;
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+        }
+        .btn-activate-header:hover {
+            transform: translateY(-2px) scale(1.02);
+            background: #7af0ff;
+            box-shadow: 0 8px 25px rgba(0, 242, 255, 0.5);
+        }
+        .btn-activate-header i { font-size: 1.1rem; }
+
+        /* ============================================================
+           CAROUSEL CARDS
+           ============================================================ */
+        .balance-cards-wrapper {
+            display: flex; 
+            gap: 12px; 
+            overflow-x: auto; 
+            padding-bottom: 10px; 
+            margin-bottom: 20px;
+            scroll-snap-type: x mandatory; 
+            -webkit-overflow-scrolling: touch;
+        }
+        .balance-cards-wrapper::-webkit-scrollbar { display: none; }
+        
+        .balance-card-slide {
+            flex: 0 0 85%; 
+            max-width: 300px;
+            border-radius: var(--radius-lg);
+            padding: 18px;
+            scroll-snap-align: center;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(0, 242, 255, 0.15);
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background-image: url('./images/IMG_8583-compressed.jpeg');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .balance-card-slide::before {
+            content: '';
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: linear-gradient(135deg, rgba(10,25,47,0.85), rgba(0,0,0,0.3));
+            z-index: 1;
+            border-radius: var(--radius-lg);
+        }
+
+        .balance-card-slide:hover { transform: translateY(-2px); }
+        
+        .card-content-wrapper {
+            position: relative;
+            z-index: 2;
+        }
+        .card-header { 
+            font-size: 0.7rem; 
+            color: rgba(255,255,255,0.8); 
+            font-weight: 600; 
+            margin-bottom: 4px; 
+            display: block; 
+            text-transform: uppercase; 
+        }
+        .card-amount { 
+            font-size: 1.8rem; 
+            font-weight: 800; 
+            color: #fff; 
+            margin-bottom: 8px; 
+            font-family: var(--font-heading); 
+            line-height: 1; 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3); 
+        }
+        .card-sub { 
+            font-size: 0.65rem; 
+            color: rgba(255,255,255,0.7); 
+        }
+        .card-icon-bg { 
+            position: absolute; 
+            bottom: -10px; 
+            right: -10px; 
+            font-size: 4rem; 
+            opacity: 0.5; 
+            color: #00f2ff; 
+            pointer-events: none; 
+            z-index: 1; 
+        }
+
+        /* ============================================================
+           GRAY ACTION CONTAINER
+           ============================================================ */
+        .gray-action-container {
+            background-color: var(--bg-gray-pill); 
+            border-radius: var(--radius-lg);
+            padding: 16px; 
+            margin-bottom: 20px;
+            border: 1px solid rgba(0, 242, 255, 0.06);
+        }
+        .grid-actions { display: flex; justify-content: space-between; gap: 8px; width: 100%; }
+        .action-box {
+            flex: 1; 
+            background-color: var(--bg-card); 
+            border-radius: var(--radius-md);
+            padding: 12px 5px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            text-align: center; 
+            box-shadow: var(--shadow-sm); 
+            transition: 0.2s; 
+            cursor: pointer; 
+            min-width: 0;
+            border: 1px solid rgba(0, 242, 255, 0.06);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .action-box:hover { 
+            transform: translateY(-2px); 
+            box-shadow: var(--shadow-md);
+            border-color: var(--accent-green);
+        }
+        .action-icon-box {
+            width: 32px; height: 32px; 
+            background-color: var(--bg-gray-pill); 
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; 
+            margin-bottom: 6px;
+            color: var(--text-main); 
+            font-size: 0.9rem;
+        }
+        .action-label { font-size: 0.7rem; font-weight: 600; color: var(--text-main); line-height: 1.1; }
+
+        /* ============================================================
+           BENTO GRID ECOSYSTEM HUB - ALL VIREON FEATURES
+           ============================================================ */
+        .ecosystem-header {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: end; 
+            margin-bottom: 16px;
+        }
+        .ecosystem-title-group h3 { 
+            font-size: 1.2rem; 
+            font-weight: 800; 
+            color: var(--text-main); 
+            margin-bottom: 4px; 
+        }
+        .ecosystem-title-group p { 
+            font-size: 0.75rem; 
+            color: var(--text-muted); 
+        }
+        .view-all-btn {
+            font-size: 0.75rem; 
+            color: var(--accent-green); 
+            font-weight: 700;
+            background: rgba(0, 242, 255, 0.1); 
+            padding: 6px 12px; 
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .view-all-btn:hover {
+            background: rgba(0, 242, 255, 0.2);
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-bottom: 30px;
+            grid-auto-rows: minmax(140px, auto);
+        }
+
+        .bento-item {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 18px 16px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        [data-theme="dark"] .bento-item {
+            background-color: rgba(10, 25, 47, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .bento-item:hover {
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border-color: var(--accent-green);
+        }
+
+        .col-span-2 { grid-column: span 2; }
+
+        .bento-top { display: flex; justify-content: space-between; align-items: flex-start; }
+        
+        .bento-icon {
+            width: 40px; height: 40px;
+            background-color: var(--bg-gray-pill);
+            color: var(--accent-green);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+        .bento-item:hover .bento-icon {
+            background: linear-gradient(135deg, var(--accent-green), #7af0ff);
+            color: #0a192f;
+            transform: scale(1.1) rotate(-5deg);
+            box-shadow: 0 4px 12px rgba(0, 242, 255, 0.3);
+        }
+        
+        .bento-title { 
+            font-size:1rem; 
+            font-weight: 900; 
+            color: var(--text-main); 
+            margin-top: 10px; 
+            line-height: 1.2;
+        }
+        .bento-desc { 
+            font-size: 0.75rem; 
+            color: var(--text-muted); 
+            line-height: 1.4; 
+            margin-top: 4px; 
+            flex: 1;
+        }
+
+        .bento-item.large .bento-icon { width: 50px; height: 50px; font-size: 1.4rem; }
+        .bento-item.large .bento-title { font-size: 1.2rem;font-weight:900; }
+        .bento-item.large .bento-desc { font-size: 0.85rem; }
+
+        .bento-badge {
+            display: inline-block; 
+            margin-top: 10px;
+            font-size: 0.65rem; 
+            color: var(--accent-green); 
+            font-weight: 700;
+            background: rgba(0, 242, 255, 0.1); 
+            padding: 3px 10px; 
+            border-radius: 6px;
+            text-align: center;
+            width: fit-content;
+        }
+
+        /* ============================================================
+           SIDEBAR
+           ============================================================ */
+        .mobile-menu-overlay {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7); 
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 1000; 
+            display: flex; 
+            opacity: 0; 
+            pointer-events: none; 
+            transition: opacity 0.3s ease;
+        }
+        .mobile-menu-overlay.active { opacity: 1; pointer-events: auto; }
+        .mobile-menu-content {
+            background: var(--bg-card); 
+            width: 85%; 
+            max-width: 320px; 
+            height: 100%;
+            padding: 0; 
+            display: flex; 
+            flex-direction: column;
+            transform: translateX(-100%); 
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 20px 0 50px rgba(0,0,0,0.3); 
+            border-right: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .mobile-menu-overlay.active .mobile-menu-content { transform: translateX(0); }
+        .sidebar-header {
+            background: linear-gradient(135deg, var(--bg-gray-pill), var(--bg-card));
+            padding: 30px 24px; 
+            border-bottom: 1px solid var(--border-color);
+            position: relative; 
+            overflow: hidden;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .close-sidebar-btn { 
+            position: absolute; 
+            top: 20px; 
+            right: 20px; 
+            font-size: 1.2rem; 
+            color: var(--text-muted); 
+            background: none; 
+            border: none; 
+            cursor: pointer; 
+            padding: 5px; 
+        }
+        .sidebar-scroll { 
+            flex-grow: 1; 
+            overflow-y: auto; 
+            padding: 20px 24px; 
+        }
+        .menu-group-label { 
+            font-size: 0.7rem; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            color: var(--text-muted); 
+            font-weight: 700; 
+            margin: 20px 0 10px 0; 
+        }
+        .menu-link { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            padding: 14px 16px; 
+            border-radius: 12px; 
+            color: var(--text-main); 
+            font-weight: 600; 
+            font-size: 0.95rem; 
+            transition: all 0.2s ease; 
+            margin-bottom: 4px; 
+        }
+        .menu-link i { 
+            width: 22px; 
+            text-align: center; 
+            color: var(--text-muted); 
+            transition: 0.2s; 
+        }
+        .menu-link:hover { 
+            background-color: var(--bg-gray-pill); 
+            transform: translateX(5px); 
+        }
+        .menu-link:hover i { color: var(--accent-green); }
+        .menu-link.active { 
+            background-color: var(--bg-gray-pill); 
+            color: var(--accent-green); 
+        }
+        .menu-link.active i { color: var(--accent-green); }
+        .sidebar-footer { 
+            padding: 20px 24px; 
+            border-top: 1px solid var(--border-color); 
+            background: var(--bg-card); 
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .logout-btn { 
+            width: 100%; 
+            padding: 14px; 
+            background: rgba(239, 68, 68, 0.1); 
+            color: #ef4444; 
+            border-radius: 12px; 
+            font-weight: 700; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 10px; 
+            border: 1px solid rgba(239, 68, 68, 0.1); 
+            transition: 0.3s; 
+        }
+        .logout-btn:hover { background: rgba(239, 68, 68, 0.2); }
+
+        /* ============================================================
+           MODALS
+           ============================================================ */
+        .modal-overlay {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: rgba(0,0,0,0.8); 
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 2000; 
+            display: none; 
+            opacity: 0; 
+            transition: opacity 0.3s ease;
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-card {
+            background: var(--bg-card); 
+            width: 100%; 
+            max-width: 380px;
+            border-radius: var(--radius-lg); 
+            padding: 30px 24px;
+            text-align: center; 
+            position: relative;
+            transform: scale(0.9); 
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .modal-overlay.active .modal-card { transform: scale(1); }
+        .close-modal-top { 
+            position: absolute; 
+            top: 15px; 
+            right: 15px; 
+            color: var(--text-muted); 
+            background: none; 
+            border: none; 
+            cursor: pointer; 
+            font-size: 1.2rem; 
+        }
+        .modal-icon-circle { 
+            width: 60px; height: 60px; 
+            background: rgba(0, 242, 255, 0.1); 
+            color: var(--accent-green); 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            margin: 0 auto 20px; 
+            font-size: 1.5rem; 
+        }
+        .modal-title { 
+            font-size: 1.25rem; 
+            font-weight: 700; 
+            color: var(--text-main); 
+            margin-bottom: 10px; 
+        }
+        .modal-desc { 
+            font-size: 0.9rem; 
+            color: var(--text-muted); 
+            margin-bottom: 25px; 
+            line-height: 1.5; 
+        }
+        .btn-modal-activate { 
+            width: 100%; 
+            padding: 12px; 
+            background: var(--accent-green); 
+            color: #0a192f; 
+            border-radius: var(--radius-pill); 
+            font-weight: 700; 
+            font-size: 0.95rem; 
+            display: block; 
+            transition: 0.2s; 
+            border: none; 
+            cursor: pointer; 
+        }
+        .btn-modal-activate:hover { 
+            opacity: 0.9; 
+            transform: translateY(-2px); 
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 480px) {
+            .grid-actions { gap: 4px; }
+            .action-label { font-size: 0.65rem; }
+            .ticker-toast { min-width: auto; width: 100%; }
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            .bento-item { padding: 14px 12px; }
+            .bento-item.large .bento-title { font-size: 1rem; }
+            .bento-item.large .bento-desc { font-size: 0.7rem; }
+            .bento-icon { width: 34px; height: 34px; font-size: 0.95rem; }
+            .bento-title { font-size: 0.85rem; margin-top: 8px; }
+            .bento-desc { font-size: 0.7rem; }
+            .balance-card-slide { flex: 0 0 75%; }
+            .btn-activate-header { padding: 10px 16px; font-size: 0.75rem; }
+            .total-balance-amount { font-size: 1.4rem; }
+        }
+
+        @media (max-width: 380px) {
+            .bento-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .bento-item { padding: 10px; }
+            .bento-icon { width: 30px; height: 30px; font-size: 0.8rem; }
+            .bento-title { font-size: 0.75rem; }
+            .bento-desc { font-size: 0.65rem; }
+        }
+    </style>
+</head>
+<body>
+    <div id="ticker-container"></div>   
+    <div class="modal-overlay" id="lockedModal">
+        <div class="modal-card">
+            <button class="close-modal-top" onclick="closeModal('lockedModal')"><i class="ri-close-line"></i></button>
+            <div class="modal-icon-circle"><i class="ri-lock-2-line"></i></div>
+            <h3 class="modal-title">Account Not Active</h3>
+            <p class="modal-desc">You need to activate your account to gain full access to this feature. Unlock unlimited earnings today.</p>
+            <button class="btn-modal-activate" onclick="window.location.href='./payment.html';closeModal('lockedModal')">Activate Now <i class="ri-arrow-right-line" style="margin-left: 5px;"></i></button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="withdrawModal">
+        <div class="modal-card">
+            <button class="close-modal-top" onclick="closeModal('lockedModal')"><i class="ri-close-line"></i></button>
+            <div class="modal-icon-circle"><i class="ri-lock-2-line"></i></div>
+            <h3 class="modal-title">Account Not Active</h3>
+            <p class="modal-desc">You need to activate your account to be able to place withdrawal.</p>
+            <button class="btn-modal-activate" onclick="window.location.href='./payment.html';closeModal('lockedModal')">Activate Now <i class="ri-arrow-right-line" style="margin-left: 5px;"></i></button>
+        </div>
+    </div>
+    <div class="mobile-menu-overlay" id="mobileMenu">
+        <div class="mobile-menu-content">
+            <div class="sidebar-header">
+                <button class="close-sidebar-btn" onclick="closeMobileMenu()"><i class="ri-close-line"></i></button>
+                <img src='logo.png' style='width:70%;margin-right:auto;'>
+            </div>
+            <div class="sidebar-scroll">
+                <div class="menu-group-label">Main</div>
+                <a href="my-account.html" class="menu-link active"><i class="ri-home-5-line"></i> Dashboard</a>
+                <a href="#" onclick="openModal('lockedModal')" class="menu-link"><i class="ri-wallet-3-line"></i> My Wallet</a>
+                <div class="menu-group-label">Ecosystem</div>
+                <a href="#" onclick="openModal('lockedModal')" class="menu-link"><i class="ri-phone-line"></i> Vireon Call</a>
+                <a href="#" onclick="openModal('lockedModal')" class="menu-link"><i class="ri-whatsapp-line"></i> WhatsApp Audio</a>
+                <a href="#" onclick="openModal('lockedModal')" class="menu-link"><i class="ri-smartphone-line"></i> Phone Call</a>
+                <a href="#" onclick="openModal('lockedModal')" class="menu-link"><i class="ri-gamepad-line"></i> Play Games</a>
+                <a href="#" onclick="openModal('lockedModal')" class="menu-link"><i class="ri-briefcase-line"></i> Remote Jobs</a>
+                <a href="#" onclick="openModal('lockedModal')" class="menu-link"><i class="ri-music-2-line"></i> Play Music</a>
+                <div class="menu-group-label">Account</div>
+                <a href="#" onclick="openModal('lockedModal')" class="menu-link"><i class="ri-user-3-line"></i> Profile</a>
+                <a href="#" onclick="openModal('lockedModal')" class="menu-link"><i class="ri-settings-3-line"></i> Settings</a>
+            </div>
+            <div class="sidebar-footer">
+                <a href="?logout=true" class="logout-btn"><i class="ri-logout-circle-r-line"></i> Secure Logout</a>
+            </div>
+        </div>
+    </div>
+    <header class="top-header">
+        <div class="user-greeting">
+            <div id="userAvatar" class="avatar-header">U</div>
+<div class="greeting-text">
+    <p>Welcome Back</p>
+    <h2 id="displayUsername">User</h2>
+</div>
+
+        </div>
+        <div class="header-controls">
+            <button class="control-pill" onclick="toggleTheme()" aria-label="Toggle Dark Mode">
+                <i class="ri-moon-line" id="themeIcon"></i>
+            </button>
+            <button class="control-pill" onclick="openMobileMenu()" aria-label="Menu">
+                <i class="ri-menu-line"></i>
+            </button>
+        </div>
+    </header>
+    <main class="main-content">
+        <section class="balance-section">
+            <div class="balance-header-row">
+                <div class="balance-info-col">
+                    <div class="hide-balance-label" onclick="toggleBalance()">
+                        <i class="ri-eye-off-line" id="eyeIcon"></i> Total Balance
+                    </div>
+                    <div class="total-balance-amount" id="balanceDisplay">₦17,000</div>
+                </div>
+                <button class="btn-activate-header" onclick="window.location.href='payment.html'">
+                    <i class="ri-flashlight-fill"></i> Activate
+                </button>
+            </div>
+            <div class="balance-cards-wrapper">
+                <div class="balance-card-slide" style="border-left: 4px solid var(--accent-green);">
+                    <div class="card-content-wrapper">
+                        <i class="ri-phone-line card-icon-bg"></i>
+                        <span class="card-header">Vireon Calls</span>
+                        <div class="card-amount">₦12,000</div>
+                        <div class="card-sub">Available for withdrawal</div>
+                    </div>
+                </div>
+                <div class="balance-card-slide" style="border-left: 4px solid var(--accent-blue);">
+                    <div class="card-content-wrapper">
+                        <i class="ri-gamepad-line card-icon-bg"></i>
+                        <span class="card-header">Game Rewards</span>
+                        <div class="card-amount">₦5,000</div>
+                        <div class="card-sub">Accumulated from games</div>
+                    </div>
+                </div>
+                <div class="balance-card-slide" style="border-left: 4px solid var(--accent-orange);">
+                    <div class="card-content-wrapper">
+                        <i class="ri-time-line card-icon-bg"></i>
+                        <span class="card-header">Pending Clearance</span>
+                        <div class="card-amount">₦0.00</div>
+                        <div class="card-sub">No active pending funds</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== QUICK ACTIONS ===== -->
+        <div class="gray-action-container">
+            <div class="grid-actions">
+                <div onclick="window.location.href='payment.html'" class="action-box">
+                    <div class="action-icon-box"><i class="ri-flashlight-fill"></i></div>
+                    <div class="action-label">Activate</div>
+                </div>
+                <div onclick="openModal('withdrawModal')" class="action-box">
+                    <div class="action-icon-box"><i class="ri-bank-line"></i></div>
+                    <div class="action-label">Withdraw</div>
+                </div>
+                <div onclick="openModal('lockedModal')" class="action-box">
+                    <div class="action-icon-box"><i class="ri-briefcase-line"></i></div>
+                    <div class="action-label">Remote Jobs</div>
+                </div>
+                <button onclick="toggleTheme()" class="action-box" style="border:none; background:transparent; padding:0;">
+                    <div class="action-icon-box"><i class="ri-contrast-2-line"></i></div>
+                    <div class="action-label">Mode</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== ECOSYSTEM HUB - ALL VIREON FEATURES FROM FLYERS ===== -->
+        <div class="ecosystem-header">
+            <div class="ecosystem-title-group">
+                <h3>Earning Hub</h3>
+                <p>All Vireon earning opportunities</p>
+            </div>
+            <div class="view-all-btn" onclick="openModal('lockedModal')">View All</div>
+        </div>
+        
+        <div class="bento-grid">
+            <!-- 1. Vireon CallCash -->
+            <div onclick="openModal('lockedModal')" class="bento-item col-span-2 large">
+                <div class="bento-top">
+                    <div class="bento-icon"><i class="ri-phone-line"></i></div>
+                    <i class="ri-arrow-right-up-line" style="color:var(--text-muted); font-size:0.9rem;"></i>
+                </div>
+                <div>
+                    <div class="bento-title">Vireon CallCash</div>
+                    <div class="bento-desc">Earn up to ₦5,000 per 15-minute call with foreigners. Longer calls, bigger rewards.</div>
+                </div>
+                <div class="bento-badge">₦5k / 15min</div>
+            </div>
+
+            <!-- 2. Vireon Surveys -->
+            <div onclick="openModal('lockedModal')" class="bento-item">
+                <div class="bento-top"><div class="bento-icon"><i class="ri-file-list-3-line"></i></div></div>
+                <div>
+                    <div class="bento-title">Vireon Surveys</div>
+                    <div class="bento-desc">Share opinions on Amazon, eBay, Tesco &amp; more.</div>
+                </div>
+                <div class="bento-badge">£5 / survey</div>
+            </div>
+
+            <!-- 3. Vireon IQ -->
+            <div onclick="openModal('lockedModal')" class="bento-item">
+                <div class="bento-top"><div class="bento-icon"><i class="ri-lightbulb-line"></i></div></div>
+                <div>
+                    <div class="bento-title">Vireon IQ</div>
+                    <div class="bento-desc">Review movie trailers, spot inaccuracies, submit corrections.</div>
+                </div>
+                <div class="bento-badge">£5 / submission</div>
+            </div>
+
+            <!-- 4. Vireon Converse -->
+            <div onclick="openModal('lockedModal')" class="bento-item">
+                <div class="bento-top"><div class="bento-icon"><i class="ri-global-line"></i></div></div>
+                <div>
+                    <div class="bento-title">Vireon Converse</div>
+                    <div class="bento-desc">Connect with international clients, assist with tasks.</div>
+                </div>
+                <div class="bento-badge">Pay per task</div>
+            </div>
+
+            <!-- 5. Pin-to-Profit -->
+            <div onclick="openModal('lockedModal')" class="bento-item">
+                <div class="bento-top"><div class="bento-icon"><i class="ri-pinterest-line"></i></div></div>
+                <div>
+                    <div class="bento-title">Pin-to-Profit</div>
+                    <div class="bento-desc">Turn Pinterest activity into income. Upload pics, earn £3 per pin.</div>
+                </div>
+                <div class="bento-badge">£3 / pin</div>
+            </div>
+
+            <!-- 6. Google Monetization -->
+            <div onclick="openModal('lockedModal')" class="bento-item">
+                <div class="bento-top"><div class="bento-icon"><i class="ri-google-line"></i></div></div>
+                <div>
+                    <div class="bento-title">Google Monetization</div>
+                    <div class="bento-desc">Earn £5 daily from simple Google-based online activities.</div>
+                </div>
+                <div class="bento-badge">£5 / day</div>
+            </div>
+
+            <!-- 7. Vireon Streak Reward -->
+            <div onclick="openModal('lockedModal')" class="bento-item">
+                <div class="bento-top"><div class="bento-icon"><i class="ri-fire-line"></i></div></div>
+                <div>
+                    <div class="bento-title">Vireon Streak</div>
+                    <div class="bento-desc">Log in daily and earn up to ₦60,000 after 30 consecutive days.</div>
+                </div>
+                <div class="bento-badge">₦60k / 30 days</div>
+            </div>
+
+            <!-- 8. X Revenue Program -->
+            <div onclick="openModal('lockedModal')" class="bento-item">
+                <div class="bento-top"><div class="bento-icon"><i class="ri-twitter-x-line"></i></div></div>
+                <div>
+                    <div class="bento-title">X Revenue Program</div>
+                    <div class="bento-desc">Connect your X account, engage, and earn £3.</div>
+                </div>
+                <div class="bento-badge">£3 / engagement</div>
+            </div>
+
+            <!-- 9. Vireon Orbit Cycle -->
+            <div onclick="openModal('lockedModal')" class="bento-item">
+                <div class="bento-top"><div class="bento-icon"><i class="ri-loop-left-line"></i></div></div>
+                <div>
+                    <div class="bento-title">Orbit Cycle</div>
+                    <div class="bento-desc">Onboarding, partner rewards, and orbit credits. 1 cycle = 1000 credits.</div>
+                </div>
+                <div class="bento-badge">1,000 credits</div>
+            </div>
+
+            <!-- 10. Partner Reward -->
+            <div onclick="openModal('lockedModal')" class="bento-item">
+                <div class="bento-top"><div class="bento-icon"><i class="ri-user-shared-line"></i></div></div>
+                <div>
+                    <div class="bento-title">Partner Reward</div>
+                    <div class="bento-desc">Earn indirect commissions and partner rewards. Every referral adds to your orbit.</div>
+                </div>
+                <div class="bento-badge">N14,500 / 7.25</div>
+            </div>
+
+            <!-- 11. WhatsApp Audio -->
+            <div onclick="openModal('lockedModal')" class="bento-item">
+                <div class="bento-top"><div class="bento-icon"><i class="ri-whatsapp-line"></i></div></div>
+                <div>
+                    <div class="bento-title">WhatsApp Audio</div>
+                    <div class="bento-desc">Connect with friends and earn daily rewards on every audio call.</div>
+                </div>
+                <div class="bento-badge">Daily</div>
+            </div>
+
+            <!-- 12. Phone Call -->
+            <div onclick="openModal('lockedModal')" class="bento-item">
+                <div class="bento-top"><div class="bento-icon"><i class="ri-smartphone-line"></i></div></div>
+                <div>
+                    <div class="bento-title">Phone Call</div>
+                    <div class="bento-desc">Regular phone calls now pay. Every minute counts toward your rewards.</div>
+                </div>
+                <div class="bento-badge">Daily</div>
+            </div>
+
+            <!-- 13. Play Game -->
+            <div onclick="openModal('lockedModal')" class="bento-item">
+                <div class="bento-top"><div class="bento-icon"><i class="ri-gamepad-line"></i></div></div>
+                <div>
+                    <div class="bento-title">Play Game</div>
+                    <div class="bento-desc">Play fun games and earn daily rewards. Entertainment that pays.</div>
+                </div>
+                <div class="bento-badge">Daily</div>
+            </div>
+
+            <!-- 14. Remote Jobs -->
+            <div onclick="openModal('lockedModal')" class="bento-item">
+                <div class="bento-top"><div class="bento-icon"><i class="ri-briefcase-line"></i></div></div>
+                <div>
+                    <div class="bento-title">Remote Jobs</div>
+                    <div class="bento-desc">Access global remote work opportunities and start earning big.</div>
+                </div>
+                <div class="bento-badge">Start</div>
+            </div>
+
+            <!-- 15. Play Music -->
+            <div onclick="openModal('lockedModal')" class="bento-item">
+                <div class="bento-top"><div class="bento-icon"><i class="ri-music-2-line"></i></div></div>
+                <div>
+                    <div class="bento-title">Play Music</div>
+                    <div class="bento-desc">Stream music and get rewarded daily. Your playlist now pays.</div>
+                </div>
+                <div class="bento-badge">Daily</div>
+            </div>
+        </div>
+    </main>
+    <script>
+        const firstNames = [
+            "Nicholas","Chidinma","Oluwaseun","Adaeze","Emeka","Folake","Ibrahim","Blessing",
+            "Chukwudi","Titilayo","Yusuf","Nneka","Obinna","Aminat","Tunde","Chioma",
+            "Abubakar","Olamide","Kunle","Tochi","Sadiq","Aisha","Gozie","Rofiat",
+            "Nnamdi","Bimpe","Jelili","Uchenna","Bashir","Amara","Seyi","Ify",
+            "Khalid","Damilola","Fatai","Ogechi","Musa","Tomiwa","Zainab","Ngozi"
+        ];
+
+        const lastNames = [
+            "Okonkwo","Ibrahim","Adeyemi","Okafor","Balogun","Eze","Usman","Oladele",
+            "Nwosu","Adebayo","Abubakar","Ogunleye","Obi","Alhassan","Akinwale","Nwachukwu",
+            "Tijani","Oyetoro","Chukwu","Bello","Adeniyi","Mohammed","Oladipo","Ezeaku",
+            "Ogundimu","Suleiman","Olawale","Nwankwo","Garba","Ogunmola","Yusuf","Babatunde"
+        ];
+
+        function generateAmount() {
+            const ranges = [
+                { min: 5000, max: 15000, weight: 25 },
+                { min: 15000, max: 35000, weight: 25 },
+                { min: 35000, max: 75000, weight: 20 },
+                { min: 75000, max: 150000, weight: 15 },
+                { min: 150000, max: 250000, weight: 10 },
+                { min: 250000, max: 450000, weight: 5 }
+            ];
+            const totalWeight = ranges.reduce((sum, r) => sum + r.weight, 0);
+            let random = Math.random() * totalWeight;
+            let selected = ranges[0];
+            for (const range of ranges) {
+                random -= range.weight;
+                if (random <= 0) { selected = range; break; }
+            }
+            const raw = selected.min + Math.random() * (selected.max - selected.min);
+            return Math.round(raw / 500) * 500;
+        }
+
+        function formatNaira(amount) {
+            return '₦' + amount.toLocaleString('en-NG');
+        }
+
+        let lastNameUsed = '';
+        function generateName() {
+            let first, last;
+            do {
+                first = firstNames[Math.floor(Math.random() * firstNames.length)];
+                last = lastNames[Math.floor(Math.random() * lastNames.length)];
+            } while (last === lastNameUsed);
+            lastNameUsed = last;
+            return first + ' ' + last;
+        }
+
+        const actionTypes = {
+            call: {
+                cssClass: 'type-call',
+                icon: 'ri-phone-line',
+                messages: [
+                    (name, amt) => ({ line1: `${name} earned from calls`, line2: `${formatNaira(amt)}`, highlight: 'earned' }),
+                    (name, amt) => ({ line1: `${name} call reward`, line2: `${formatNaira(amt)}`, highlight: 'credited' }),
+                    (name, amt) => ({ line1: `Vireon Call: ${name}`, line2: `${formatNaira(amt)}`, highlight: 'paid' }),
+                    (name, amt) => ({ line1: `${name} made calls`, line2: `${formatNaira(amt)}`, highlight: 'earned' }),
+                    (name, amt) => ({ line1: `${name} call earnings`, line2: `${formatNaira(amt)}`, highlight: 'added' }),
+                ]
+            },
+            withdraw: {
+                cssClass: 'type-withdraw',
+                icon: 'ri-bank-line',
+                messages: [
+                    (name, amt) => ({ line1: `${name} just withdrew`, line2: `${formatNaira(amt)}`, highlight: 'successfully' }),
+                    (name, amt) => ({ line1: `${name} cashed out`, line2: `${formatNaira(amt)}`, highlight: 'completed' }),
+                    (name, amt) => ({ line1: `Withdrawal by ${name}`, line2: `${formatNaira(amt)}`, highlight: 'processed' }),
+                    (name, amt) => ({ line1: `${name} transferred`, line2: `${formatNaira(amt)}`, highlight: 'to bank' }),
+                ]
+            },
+            activated: {
+                cssClass: 'type-activated',
+                icon: 'ri-user-add-line',
+                messages: [
+                    (name) => ({ line1: `${name} just activated`, line2: 'Premium Member', highlight: 'welcome' }),
+                    (name) => ({ line1: `${name} activated account`, line2: 'Premium Member', highlight: 'verified' }),
+                    (name) => ({ line1: `New member: ${name}`, line2: 'Premium Member', highlight: 'activated' }),
+                    (name) => ({ line1: `${name} joined Vireon`, line2: 'Premium Member', highlight: 'onboarded' }),
+                ]
+            },
+            game: {
+                cssClass: 'type-game',
+                icon: 'ri-gamepad-line',
+                messages: [
+                    (name, amt) => ({ line1: `${name} won from games`, line2: `${formatNaira(amt)}`, highlight: 'reward' }),
+                    (name, amt) => ({ line1: `${name} game reward`, line2: `${formatNaira(amt)}`, highlight: 'earned' }),
+                    (name, amt) => ({ line1: `Game payout: ${name}`, line2: `${formatNaira(amt)}`, highlight: 'claimed' }),
+                    (name, amt) => ({ line1: `${name} played & earned`, line2: `${formatNaira(amt)}`, highlight: 'bonus' }),
+                ]
+            },
+            music: {
+                cssClass: 'type-music',
+                icon: 'ri-music-2-line',
+                messages: [
+                    (name, amt) => ({ line1: `${name} earned from music`, line2: `${formatNaira(amt)}`, highlight: 'reward' }),
+                    (name, amt) => ({ line1: `${name} music reward`, line2: `${formatNaira(amt)}`, highlight: 'credited' }),
+                    (name, amt) => ({ line1: `Music payout: ${name}`, line2: `${formatNaira(amt)}`, highlight: 'earned' }),
+                ]
+            },
+            job: {
+                cssClass: 'type-job',
+                icon: 'ri-briefcase-line',
+                messages: [
+                    (name, amt) => ({ line1: `${name} completed remote job`, line2: `${formatNaira(amt)}`, highlight: 'paid' }),
+                    (name, amt) => ({ line1: `${name} job reward`, line2: `${formatNaira(amt)}`, highlight: 'earned' }),
+                    (name, amt) => ({ line1: `Remote work: ${name}`, line2: `${formatNaira(amt)}`, highlight: 'completed' }),
+                ]
+            }
+        };
+
+        const needsAmount = ['call', 'withdraw', 'game', 'music', 'job'];
+
+        const typeWeights = {
+            call: 30,
+            withdraw: 25,
+            activated: 10,
+            game: 15,
+            music: 10,
+            job: 10
+        };
+
+        function pickType() {
+            const entries = Object.entries(typeWeights);
+            const total = entries.reduce((s, [, w]) => s + w, 0);
+            let r = Math.random() * total;
+            for (const [type, weight] of entries) {
+                r -= weight;
+                if (r <= 0) return type;
+            }
+            return 'call';
+        }
+
+        const recentCombos = [];
+        function isRecentCombo(name, typeKey, msgIndex) {
+            return recentCombos.includes(`${name}-${typeKey}-${msgIndex}`);
+        }
+        function addCombo(name, typeKey, msgIndex) {
+            recentCombos.push(`${name}-${typeKey}-${msgIndex}`);
+            if (recentCombos.length > 60) recentCombos.shift();
+        }
+
+        function showTicker() {
+            const container = document.getElementById('ticker-container');
+            
+            let name, typeKey, actionType, msgIndex, msgData;
+            let attempts = 0;
+            
+            do {
+                name = generateName();
+                typeKey = pickType();
+                actionType = actionTypes[typeKey];
+                msgIndex = Math.floor(Math.random() * actionType.messages.length);
+                attempts++;
+            } while (isRecentCombo(name, typeKey, msgIndex) && attempts < 20);
+            
+            const amount = needsAmount.includes(typeKey) ? generateAmount() : null;
+            
+            msgData = amount !== null 
+                ? actionType.messages[msgIndex](name, amount) 
+                : actionType.messages[msgIndex](name);
+            
+            addCombo(name, typeKey, msgIndex);
+            
+            const toast = document.createElement('div');
+            toast.className = `ticker-toast ${actionType.cssClass}`;
+            toast.innerHTML = `
+                <div class="ticker-icon">
+                    <i class="${actionType.icon}"></i>
+                </div>
+                <div class="ticker-content">
+                    <div class="ticker-name">${msgData.line1}</div>
+                    <div class="ticker-amount">${msgData.line2} <span>${msgData.highlight}</span></div>
+                </div>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                if (toast.parentNode) toast.parentNode.removeChild(toast);
+            }, 7600);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                showTicker();
+                setInterval(() => {
+                    showTicker();
+                }, 6000 + Math.random() * 3000);
+            }, 4000);
+        });
+
+        // ============================================================
+        // MODAL LOGIC
+        // ============================================================
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+        function updateWithdrawAmount() {
+            const select = document.getElementById('withdrawSource');
+            const amountDisplay = document.getElementById('withdrawAmountDisplay');
+            const labelDisplay = document.getElementById('withdrawSourceLabel');
+            
+            const selectedValue = select.value;
+
+            if (selectedValue === 'calls') {
+                amountDisplay.innerText = '₦12,000';
+                labelDisplay.innerText = 'Withdrawing from: Vireon Calls';
+            } else if (selectedValue === 'games') {
+                amountDisplay.innerText = '₦5,000';
+                labelDisplay.innerText = 'Withdrawing from: Game Rewards';
+            } else {
+                amountDisplay.innerText = '₦17,000';
+                labelDisplay.innerText = 'Withdrawing from: Total Balance';
+            }
+        }
+
+        function handleWithdrawSubmit() {
+            closeModal('withdrawModal');
+            setTimeout(() => {
+                openModal('lockedModal');
+            }, 300);
+        }
+        function openMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        document.getElementById('mobileMenu').addEventListener('click', function(e) {
+            if (e.target === this) { closeMobileMenu(); }
+        });
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.setAttribute('data-theme', 'light');
+                icon.className = 'ri-sun-line';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                icon.className = 'ri-moon-line';
+            }
+        }
+        let isBalanceHidden = false;
+        function toggleBalance() {
+            const display = document.getElementById('balanceDisplay');
+            const icon = document.getElementById('eyeIcon');
+            if (!isBalanceHidden) {
+                display.innerText = '****';
+                icon.className = 'ri-eye-line';
+            } else {
+                display.innerText = '₦17,000';
+                icon.className = 'ri-eye-off-line';
+            }
+            isBalanceHidden = !isBalanceHidden;
+        }
+
+        // Spinner animation CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            .spinner {
+                animation: spin 0.8s linear infinite;
+            }
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        console.log('🚀 Vireon – Dashboard Loaded');
+
+        document.addEventListener('DOMContentLoaded', function() {
+    // 1. Retrieve the stored username from localStorage
+    const storedUsername = localStorage.getItem('vireon_username');
+
+    const usernameDisplay = document.getElementById('displayUsername');
+    const avatarDisplay = document.getElementById('userAvatar');
+
+    if (storedUsername && storedUsername.trim() !== '') {
+        const cleanUsername = storedUsername.trim();
+
+        // 2. Set the displayed username
+        if (usernameDisplay) {
+            usernameDisplay.textContent = cleanUsername;
+        }
+
+        // 3. Extract the first 2 letters for the avatar initials
+        const initials = cleanUsername.substring(0, 2).toUpperCase();
+
+        // 4. Update the avatar placeholder
+        if (avatarDisplay) {
+            avatarDisplay.textContent = initials;
+        }
+    } else {
+        // Fallback for guests or unauthenticated visitors
+        if (usernameDisplay) usernameDisplay.textContent = 'Guest';
+        if (avatarDisplay) avatarDisplay.textContent = 'GU';
+    }
+});
+
+    </script>
+
+</body>
+</html>
+
